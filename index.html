@@ -212,33 +212,49 @@
           <section class="lp-screen" id="pg_myjars">
             <div class="lp-navbar"><div class="nb-title">我的酱缸</div></div>
             <div class="lp-body lp-scroll pad">
-              <div class="lp-card lp-card-pad" style="background:linear-gradient(135deg,var(--lp-red),var(--lp-red-deep));color:#F6E9C8;margin-bottom:14px">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start">
-                  <div><div style="font-family:var(--lp-kai);font-size:18px;font-weight:800">张府家酿 · 甲辰年</div>
-                  <div style="font-size:12px;opacity:.85;margin-top:4px">一年期 · 200 瓶 · 第 6 月</div></div>
+              <div class="jar-sum">共 <b>2</b> 缸 · 酿造中 <b>1</b> 缸 · 已完成 <b>1</b> 缸</div>
+
+              <!-- 酿造中 -->
+              <div class="jar-card" onclick="LP.openOrder('brewing')">
+                <div class="jc-hd">
+                  <div class="jc-av">缸</div>
+                  <div class="jc-tx">
+                    <div class="jc-t">二号酱缸<span class="jc-period">三年期</span></div>
+                    <div class="jc-s">张府家酿 · 乙巳年 · 缸号 LP-JG-2025-0807</div>
+                  </div>
                   <span class="lp-tag gold">酿造中</span>
                 </div>
-                <div class="lp-progress" style="margin-top:14px;background:rgba(0,0,0,.2)"><i style="width:48%"></i></div>
-                <div style="font-size:11px;opacity:.8;margin-top:6px">进度 48% · 距出缸约 6 个月</div>
+                <div class="jc-bar"><i style="width:39%"></i></div>
+                <div class="jc-ft">
+                  <span>已酿 14 / 36 月 · 剩余 180 瓶</span>
+                  <span class="more">详情<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+                </div>
               </div>
 
-              <div class="lp-row" data-go="jardetail">
-                <div class="av">缸</div>
-                <div class="main"><div class="t">一号酱缸（一年期）</div><div class="s">已酿 6 月 · 翻缸完成 · 待抽油</div></div>
-                <div class="rt"><span class="lp-tag">查看</span></div>
+              <!-- 已完成 -->
+              <div class="jar-card" onclick="LP.openOrder('done')">
+                <div class="jc-hd">
+                  <div class="jc-av fin">缸</div>
+                  <div class="jc-tx">
+                    <div class="jc-t">一号酱缸<span class="jc-period">一年期</span></div>
+                    <div class="jc-s">张府家酿 · 甲辰年 · 缸号 LP-JG-2026-0401</div>
+                  </div>
+                  <span class="lp-tag ok">已完成</span>
+                </div>
+                <div class="jc-bar full"><i style="width:100%"></i></div>
+                <div class="jc-ft">
+                  <span>12 月圆满出缸 · 已提货 200 瓶</span>
+                  <span class="more">详情<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+                </div>
               </div>
-              <div class="lp-row" data-go="jardetail">
-                <div class="av" style="background:rgba(67,39,26,.1);color:var(--lp-brown-2)">缸</div>
-                <div class="main"><div class="t">二号酱缸（三年期）</div><div class="s">已酿 14 月 · 尝鲜装已发 20 瓶</div></div>
-                <div class="rt"><span class="lp-tag gold">尝鲜中</span></div>
-              </div>
-              <button class="lp-btn lp-btn-gold lp-btn-block" style="margin-top:16px" data-go="cycle">+ 再认领一缸</button>
+
+              <button class="lp-btn lp-btn-gold lp-btn-block" style="margin-top:8px" data-go="cycle">+ 再认领一缸</button>
             </div>
           </section>
 
           <!-- ========== 酱缸详情 / 酿造进度 ========== -->
           <section class="lp-screen" id="pg_jardetail">
-            <div class="lp-navbar"><button class="nb-btn" data-go="myjars"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">酿造进度</div></div>
+            <div class="lp-navbar"><button class="nb-btn" onclick="LP.back('jardetail','myjars')"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">酿造进度</div></div>
             <div class="lp-body lp-scroll pad">
               <div class="jd-hero">
                 <div class="jd-t">一号酱缸</div>
@@ -422,7 +438,7 @@
 
           <!-- ========== 提货申请 ========== -->
           <section class="lp-screen" id="pg_pickup">
-            <div class="lp-navbar"><button class="nb-btn" data-go="myjars"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">申请提货</div></div>
+            <div class="lp-navbar"><button class="nb-btn" onclick="LP.back('pickup','orderdetail')"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">申请提货</div></div>
             <div class="lp-body lp-scroll pad">
               <div class="lp-row" style="border:none;background:var(--lp-red-wash);border-radius:10px;padding:12px;margin-bottom:14px">
                 <div class="main"><div class="t" style="color:var(--lp-red)">剩余可提 140 瓶</div><div class="s">本提货年度已提 1 次，尚可提 3 次（按首次提货日滚动 12 个月）</div></div>
@@ -839,6 +855,21 @@
           <img id="imgBig" src="" alt="">
         </div>
 
+        <!-- 认领证书预览 -->
+        <div class="lp-mask center" id="certMask" onclick="if(event.target===this)LP.closeCert()">
+          <div class="cert-sheet">
+            <div class="cert-x" onclick="LP.closeCert()">×</div>
+            <div class="cert-t">酱缸认领证书</div>
+            <div class="cert-s">编号 LP-CERT-2026-0401 · 颁发于 2026-04-20</div>
+            <div class="cert-box"><img src="assets/img/cert.jpg" alt="认领证书"></div>
+            <div class="cert-note">长按图片可直接保存，或点击下方按钮保存到相册</div>
+            <div class="qr-btns">
+              <button class="lp-btn lp-btn-ghost" onclick="LP.closeCert()">关闭</button>
+              <button class="lp-btn lp-btn-primary" onclick="LP.saveCert()">保存证书</button>
+            </div>
+          </div>
+        </div>
+
         <!-- 拨号确认弹层 -->
         <div class="lp-mask center" id="telMask" onclick="if(event.target===this)LP.closeTel()">
           <div class="tel-sheet">
@@ -866,7 +897,7 @@
             <div class="qr-note">长按识别 · 或保存到相册后用微信扫一扫</div>
             <div class="qr-btns">
               <button class="lp-btn lp-btn-ghost" onclick="LP.saveQr()">保存到相册</button>
-              <button class="lp-btn lp-btn-primary" onclick="LP.closeQr();LP.show('chat')">去在线咨询</button>
+              <button class="lp-btn lp-btn-primary" onclick="LP.closeQr();LP.soon('在线咨询')">去在线咨询</button>
             </div>
           </div>
         </div>

@@ -299,6 +299,7 @@
       title:'一年期酱缸认领', price:8000, priceText:'8,000', bottles:200,
       no:'LP20260420001', man:'张酱友', timer:'张府家酿 · 甲辰年',
       payTime:'2026-04-20 10:32', startTime:'2026-04-20 已完成制醅',
+      certNo:'LP-CERT-2026-0401', certDate:'2026-04-20',
       note:'本订单已完成提货，感谢您的认领。可继续查看酿造记录与提货历史。',
       jarSub:'12 月色满缸，记录已归档'
     },
@@ -348,6 +349,15 @@
         + '<div class="arr">进入<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>'
         + '</div>');
 
+    // 认领证书：仅已完成订单可见，支持长按/按钮保存
+    const certBlock = o.state!=='done' ? '' :
+        '<div class="od-cert" onclick="LP.openCert()">'
+        + '<div class="ct"><img src="assets/img/cert.jpg" alt="认领证书"></div>'
+        + '<div class="main"><div class="t">酱缸认领证书</div>'
+        + '<div class="s">编号 ' + (o.certNo || 'LP-CERT-2026-0401') + ' · 颁发于 ' + (o.certDate || '2026-04-20') + '</div></div>'
+        + '<div class="arr">查看<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>'
+        + '</div>';
+
     body.innerHTML = ''
       + '<div class="lp-card lp-card-pad" style="text-align:center;margin-bottom:14px">'
       +   tagHtml
@@ -359,6 +369,7 @@
       +   '<div class="s">' + o.note + '</div>'
       + '</div>'
       + jarBlock
+      + certBlock
       + '<div class="lp-card lp-card-pad" style="font-size:12.5px;line-height:2;color:var(--lp-ink-2)">'
       +   '<div style="display:flex;justify-content:space-between"><span>订单编号</span><span>' + o.no + '</span></div>'
       +   '<div style="display:flex;justify-content:space-between"><span>认领人</span><span>' + o.man + '</span></div>'
@@ -491,6 +502,34 @@
     document.getElementById('imgMask').classList.add('on');
   }
   function closeImg(){ document.getElementById('imgMask').classList.remove('on'); }
+
+  /* ---------- 认领证书：查看 / 保存 ---------- */
+  function openCert(){
+    const m = document.getElementById('certMask');
+    if(m) m.classList.add('on');
+  }
+  function closeCert(){
+    const m = document.getElementById('certMask');
+    if(m) m.classList.remove('on');
+  }
+  function saveCert(){
+    const proto = location.protocol;
+    // https 环境下触发真实下载；本地 file:// 打开时仅提示，避免浏览器跳走到图片本身
+    const canDownload = (proto === 'http:' || proto === 'https:');
+    let ok = false;
+    if(canDownload){
+      try{
+        const a = document.createElement('a');
+        a.href = 'assets/img/cert.jpg';
+        a.download = '龙牌湘味-酱缸认领证书.jpg';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        ok = true;
+      }catch(e){ ok = false; }
+    }
+    toast(ok ? '证书已保存到相册' : '证书已保存到相册（演示）');
+  }
 
   /** 从消息跳到酿造进度后，定位并高亮对应月份 */
   function focusFb(month){
@@ -851,12 +890,12 @@
     function tick(){const d=new Date();clk.textContent=d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');}
     tick(); setInterval(tick,10000);
   }
-  window.LP = {show,selCycle,selPType,selTcycle,pay,playVideo,familySubmit,pickupSubmit,transferSubmit,toggleNav,closeNav,renderTransfer,heroGo,
+  window.LP = {show,back,selCycle,selPType,selTcycle,pay,playVideo,familySubmit,pickupSubmit,transferSubmit,toggleNav,closeNav,renderTransfer,heroGo,
     toggleFb,viewImg,closeImg,focusFb,
     openAddr,closeAddr,chooseAddr,saveAddr,pickTag,pickRegion,closeRegion,rgPick,rgBack,renderPickAddr,
     openOrder,renderOrder,openRefund,pickReason,refundSubmit,copyCode,goExpress,
     payNow,cancelOrder,
-    callService,closeTel,doCall,openQr,closeQr,saveQr,faq,chatSend,chatQuick,
+    callService,closeTel,doCall,openQr,closeQr,saveQr,faq,openCert,closeCert,saveCert,chatSend,chatQuick,
     requireLogin,closeLogin,wxLogin,bindPhone,skipPhone,logout,doc,soon,renderMine};
   window.addEventListener('DOMContentLoaded', boot);
 })();

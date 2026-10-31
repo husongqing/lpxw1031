@@ -745,6 +745,59 @@ html.is-mobile #navToggle, html.is-mobile #navDrawer{display:none !important}
 .od-jar .arr{flex:none;display:flex;align-items:center;gap:3px;font-size:11.5px;font-weight:700;color:var(--lp-red)}
 .od-jar .arr svg{width:15px;height:15px;stroke:var(--lp-red);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 
+/* 我的酱缸 · 列表卡片 */
+.jar-sum{font-size:11.5px;color:var(--lp-ink-3);margin:2px 0 12px 2px}
+.jar-sum b{font-family:var(--lp-serif);font-size:13px;color:var(--lp-brown);margin:0 2px}
+.jar-card{padding:14px;margin-bottom:12px;border-radius:var(--lp-r-l);cursor:pointer;
+  background:#FFFDF7;border:1px solid var(--lp-line-soft);
+  box-shadow:var(--lp-sh-s);transition:background .15s}
+.jar-card:active{background:#F7EFDD}
+.jc-hd{display:flex;align-items:center;gap:11px}
+.jc-av{width:44px;height:44px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--lp-kai);font-size:17px;font-weight:800;color:#F7EACD;
+  background:linear-gradient(140deg,var(--lp-red),#7C1E15);box-shadow:0 4px 10px rgba(158,42,30,.22)}
+.jc-av.fin{background:linear-gradient(140deg,#6E5734,#4A3A22);box-shadow:0 4px 10px rgba(58,36,16,.22)}
+.jc-tx{flex:1;min-width:0}
+.jc-t{display:flex;align-items:center;gap:6px;font-family:var(--lp-kai);font-size:15px;font-weight:800;
+  color:var(--lp-brown);letter-spacing:.5px}
+.jc-period{font-family:var(--lp-sans);font-size:10.5px;font-weight:700;letter-spacing:0;
+  padding:1px 6px;border-radius:5px;background:rgba(194,160,90,.16);color:var(--lp-gold-deep)}
+.jc-s{font-size:11.5px;color:var(--lp-ink-3);margin-top:4px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jc-bar{height:6px;margin:12px 0 8px;border-radius:99px;background:rgba(67,39,26,.09);overflow:hidden}
+.jc-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--lp-red),#C0703B)}
+.jc-bar.full i{background:linear-gradient(90deg,#4F7A46,#7BA46A)}
+.jc-ft{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--lp-ink-3)}
+.jc-ft .more{display:flex;align-items:center;gap:2px;font-size:11.5px;font-weight:700;color:var(--lp-red)}
+.jc-ft .more svg{width:13px;height:13px;fill:none;stroke:var(--lp-red);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* 订单详情 · 认领证书 */
+.od-cert{display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:14px;border-radius:13px;cursor:pointer;
+  background:linear-gradient(135deg,#FFFCF3,#F9F0DC);border:1px solid rgba(194,160,90,.45);
+  box-shadow:0 3px 12px rgba(120,86,40,.06)}
+.od-cert:active{background:#F5EAD3}
+.od-cert .ct{width:42px;height:58px;flex:none;border-radius:6px;overflow:hidden;
+  border:1px solid rgba(194,160,90,.55);box-shadow:0 3px 8px rgba(120,86,40,.14)}
+.od-cert .ct img{width:100%;height:100%;object-fit:cover;display:block}
+.od-cert .main{flex:1;min-width:0}
+.od-cert .main .t{font-family:var(--lp-kai);font-size:14.5px;font-weight:800;color:var(--lp-brown);letter-spacing:.5px}
+.od-cert .main .s{font-size:11.5px;color:var(--lp-ink-3);margin-top:4px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.od-cert .arr{flex:none;display:flex;align-items:center;gap:3px;font-size:11.5px;font-weight:700;color:var(--lp-gold-deep)}
+.od-cert .arr svg{width:15px;height:15px;fill:none;stroke:var(--lp-gold-deep);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* 认领证书预览弹层 */
+.cert-sheet{position:relative;width:88%;max-height:88%;overflow-y:auto;background:#FFFDF7;border-radius:18px;
+  padding:22px 16px 18px;text-align:center;animation:lp-pop .24s ease;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.cert-sheet::-webkit-scrollbar{width:0;display:none}
+.cert-x{position:absolute;right:12px;top:8px;font-size:22px;line-height:1;color:var(--lp-ink-3);cursor:pointer}
+.cert-t{font-family:var(--lp-kai);font-size:17px;font-weight:800;color:var(--lp-brown)}
+.cert-s{font-size:11.5px;color:var(--lp-ink-3);margin-top:6px}
+.cert-box{margin:12px auto 10px;border-radius:10px;overflow:hidden;
+  border:1px solid var(--lp-line);box-shadow:0 8px 22px rgba(58,36,16,.14);background:#fff}
+.cert-box img{width:100%;display:block}
+.cert-note{font-size:10.5px;color:var(--lp-ink-3);margin-bottom:14px}
+
 /* 订单详情 · 暂无酿造记录占位 */
 .od-jar-none{margin-bottom:14px;padding:24px 18px;text-align:center;border-radius:13px;
   background:#FFFDF7;border:1px dashed rgba(194,160,90,.6)}
