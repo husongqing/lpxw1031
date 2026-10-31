@@ -254,6 +254,8 @@
     show('mine');
   }
   function doc(name){ toast('《' + name + '》（演示）'); }
+  /* 未接入的功能先给轻提示，不做跳转 */
+  function soon(name){ toast(name + '功能建设中，敬请期待'); }
   function renderMine(){
     const u = document.getElementById('mineUser'), g = document.getElementById('mineGuest');
     if(u) u.style.display = isLogged ? '' : 'none';
@@ -377,11 +379,16 @@
       pending: '<button class="lp-btn lp-btn-ghost lp-btn-block" data-go="service">联系客服</button>'
         + '<button class="lp-btn lp-btn-primary lp-btn-block" onclick="LP.openRefund()">申请退款</button>',
       canceled: '<button class="lp-btn lp-btn-ghost lp-btn-block" data-go="service">联系客服</button>'
-        + '<button class="lp-btn lp-btn-primary lp-btn-block" data-go="cycle">再次认领</button>'
+        + '<button class="lp-btn lp-btn-primary lp-btn-block" data-go="cycle">再次认领</button>',
+      // 酿造中：不提供转期 / 提货入口，底部操作条整体隐藏
+      brewing: ''
     };
-    foot.innerHTML = FOOT[o.state]
-      || ('<button class="lp-btn lp-btn-ghost lp-btn-block" data-go="transfer">申请转期</button>'
+    const footHtml = FOOT.hasOwnProperty(o.state)
+      ? FOOT[o.state]
+      : ('<button class="lp-btn lp-btn-ghost lp-btn-block" data-go="transfer">申请转期</button>'
         + '<button class="lp-btn lp-btn-primary lp-btn-block" data-go="pickup">申请提货</button>');
+    foot.innerHTML = footHtml;
+    foot.style.display = footHtml ? 'flex' : 'none';
   }
 
   /* ---------- 待支付：立即支付 / 取消订单 ---------- */
@@ -850,6 +857,6 @@
     openOrder,renderOrder,openRefund,pickReason,refundSubmit,copyCode,goExpress,
     payNow,cancelOrder,
     callService,closeTel,doCall,openQr,closeQr,saveQr,faq,chatSend,chatQuick,
-    requireLogin,closeLogin,wxLogin,bindPhone,skipPhone,logout,doc,renderMine};
+    requireLogin,closeLogin,wxLogin,bindPhone,skipPhone,logout,doc,soon,renderMine};
   window.addEventListener('DOMContentLoaded', boot);
 })();
