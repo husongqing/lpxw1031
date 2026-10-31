@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>龙牌湘味 · 认领酱缸（后台管理端）</title>
+<link rel="stylesheet" href="assets/css/brand.css">
+<link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+
+<!-- ============ 登录页 ============ -->
+<div class="ad-login" id="loginPage">
+  <div class="box">
+    <div class="lg"><div class="lp-seal lp-seal-lg"><span>龍牌<br>湘味</span></div></div>
+    <h1>认领酱缸管理后台</h1>
+    <div class="sub">LONGPAI · ADMIN</div>
+    <div class="ad-bar" style="margin-bottom:14px"><input class="ad-input" style="flex:1" value="admin"></div>
+    <div class="ad-bar" style="margin-bottom:18px"><input class="ad-input" style="flex:1" type="password" value="123456"></div>
+    <button class="ad-btn primary" style="width:100%;height:42px;font-size:15px" onclick="AD.enter()">登 录 后 台</button>
+    <p style="text-align:center;color:var(--lp-ink-3);font-size:11px;margin-top:14px">演示账号 · 任意填写即可进入</p>
+  </div>
+</div>
+
+<!-- ============ 后台主体 ============ -->
+<div class="ad-root" id="adminRoot" style="display:none">
+  <!-- 侧边栏 -->
+  <aside class="ad-side">
+    <div class="ad-logo">
+      <div class="lp-seal"><span>龍牌<br>湘味</span></div>
+      <div><div class="nm">龙牌湘味</div><div class="sub">认领酱缸后台</div></div>
+    </div>
+    <nav class="ad-menu" id="menu">
+      <div class="ad-grp">概览</div>
+      <div class="ad-mi on" data-mod="dashboard"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="5" rx="1"/><rect x="13" y="11" width="8" height="10" rx="1"/><rect x="3" y="14" width="8" height="7" rx="1"/></svg>工作台</div>
+      <div class="ad-grp">业务管理</div>
+      <div class="ad-mi" data-mod="users"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5M16 6a3 3 0 010 6M21 20a4 4 0 00-4-4"/></svg>用户管理</div>
+      <div class="ad-mi" data-mod="jars"><svg viewBox="0 0 24 24"><path d="M5 21V6l7-3 7 3v15M5 11h14"/></svg>酱缸 / 认领订单</div>
+      <div class="ad-mi" data-mod="packages"><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h5l3 3v3h-8M7 19a2 2 0 100-.01"/></svg>套餐配置</div>
+      <div class="ad-mi" data-mod="brews"><svg viewBox="0 0 24 24"><path d="M4 12h14M12 6l6 6-6 6M20 4v16"/></svg>酿造记录</div>
+      <div class="ad-mi" data-mod="family"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5"/></svg>家庭日活动</div>
+      <div class="ad-mi" data-mod="orders"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6zM15 2v5h5M9 13h6M9 17h6"/></svg>订单与提货</div>
+      <div class="ad-mi" data-mod="transfer"><svg viewBox="0 0 24 24"><path d="M4 12h14M12 6l6 6-6 6"/></svg>转期管理</div>
+      <div class="ad-mi" data-mod="tasting"><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h5l3 3v3h-8"/></svg>尝鲜装管理</div>
+      <div class="ad-grp">运营</div>
+      <div class="ad-mi" data-mod="messages"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H7l-3 3z"/></svg>消息管理</div>
+      <div class="ad-mi" data-mod="content"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 14h8"/></svg>内容管理</div>
+      <div class="ad-grp">系统</div>
+      <div class="ad-mi" data-mod="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1l2-1.5-2-3.5-2.3 1a7 7 0 00-1.7-1l-.3-2.5h-4l-.3 2.5a7 7 0 00-1.7 1l-2.3-1-2 3.5 2 1.5a7 7 0 000 2l-2 1.5 2 3.5 2.3-1a7 7 0 001.7 1l.3 2.5h4l.3-2.5a7 7 0 001.7-1l2.3 1 2-3.5-2-1.5a7 7 0 00.1-1z"/></svg>系统设置</div>
+    </nav>
+    <div class="ad-side-foot">v1.0.0 · 龙牌湘味 · 认领酱缸<br>© 龙牌食品股份有限公司</div>
+  </aside>
+
+  <!-- 主区 -->
+  <div class="ad-main">
+    <header class="ad-top">
+      <div class="ad-crumb">认领酱缸后台 / <b id="crumb">工作台</b></div>
+      <div class="sp"></div>
+      <div class="act">
+        <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg>
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <div class="ad-user"><div class="av">管</div><div><div class="nm"> admin</div><div class="rl">超级管理员</div></div></div>
+      </div>
+    </header>
+    <div class="ad-content" id="content">
+
+      <!-- ===== 工作台 ===== -->
+      <section class="ad-mod on" id="m_dashboard">
+        <div class="ad-stats">
+          <div class="ad-stat"><div class="ic" style="background:linear-gradient(135deg,var(--lp-red-soft),var(--lp-red))"><svg viewBox="0 0 24 24"><path d="M5 21V6l7-3 7 3v15M5 11h14"/></svg></div><div><div class="lab">认领酱缸总数</div><div class="num">1,286</div><div class="up">▲ 12.4% 本月</div></div></div>
+          <div class="ad-stat"><div class="ic" style="background:linear-gradient(135deg,var(--lp-gold),var(--lp-gold-deep))"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5"/></svg></div><div><div class="lab">注册用户</div><div class="num">2,043</div><div class="up">▲ 8.1%</div></div></div>
+          <div class="ad-stat"><div class="ic" style="background:linear-gradient(135deg,#5a3a26,#43271A)"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6zM15 2v5h5"/></svg></div><div><div class="lab">累计销售额</div><div class="num">¥1,860万</div><div class="up">▲ 15.7%</div></div></div>
+          <div class="ad-stat"><div class="ic" style="background:linear-gradient(135deg,var(--lp-ok),#2f5e39)"><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h5l3 3v3h-8"/></svg></div><div><div class="lab">待发货提货单</div><div class="num">37</div><div class="up" style="color:var(--lp-warn)">需处理</div></div></div>
+        </div>
+        <div class="ad-2col">
+          <div class="ad-card"><div class="hd"><div class="t">访问量 / 销售额趋势</div><div class="ad-tag gold">近 12 个月</div></div><div class="bd"><div id="chartTrend" class="ad-chart"></div><div class="ad-legend"><span><i style="background:var(--lp-red)"></i>访问量(万)</span><span><i style="background:var(--lp-gold)"></i>销售额(万)</span></div></div></div>
+          <div class="ad-card"><div class="hd"><div class="t">认领周期占比</div></div><div class="bd"><div id="chartCycle" class="ad-chart" style="height:200px"></div></div></div>
+        </div>
+        <div class="ad-card"><div class="hd"><div class="t">待办事项</div><div class="ad-tag red">9 项</div></div><div class="bd">
+          <div class="ad-row">
+            <div class="lp-tag red">高</div><span style="font-size:13px">37 笔提货单待发货</span>
+            <div class="lp-tag gold">中</div><span style="font-size:13px">11 场家庭日报名待确认</span>
+            <div class="lp-tag gray">低</div><span style="font-size:13px">本月 14 缸将进入翻缸节点</span>
+          </div>
+        </div></div>
+      </section>
+
+      <!-- ===== 用户管理 ===== -->
+      <section class="ad-mod" id="m_users">
+        <div class="ad-page-hd"><div><h2>用户管理</h2><div class="desc">认领用户、会员等级与绑定酱缸</div></div></div>
+        <div class="ad-card"><div class="bd">
+          <div class="ad-bar">
+            <input class="ad-input" placeholder="手机号 / 昵称" style="width:200px">
+            <select class="ad-select"><option>全部会员等级</option><option>酿香会员</option><option>藏酿会员</option></select>
+            <button class="ad-btn primary">查询</button><button class="ad-btn plain">重置</button>
+            <div class="sp" style="flex:1"></div>
+            <button class="ad-btn primary">+ 导出 Excel</button>
+          </div>
+          <table class="ad-table"><thead><tr><th>用户ID</th><th>昵称</th><th>手机号</th><th>会员等级</th><th>认领缸数</th><th>累计消费</th><th>注册时间</th><th>操作</th></tr></thead><tbody id="tb_users"></tbody></table>
+          <div class="ad-pager"><span>共 2,043 条</span><div class="pg">«</div><div class="pg on">1</div><div class="pg">2</div><div class="pg">3</div><div class="pg">»</div></div>
+        </div></div>
+      </section>
+
+      <!-- ===== 酱缸 / 认领订单 ===== -->
+      <section class="ad-mod" id="m_jars">
+        <div class="ad-page-hd"><div><h2>酱缸 / 认领订单</h2><div class="desc">每一缸的唯一档案、状态与酿造进度</div></div></div>
+        <div class="ad-card"><div class="bd">
+          <div class="ad-bar">
+            <select class="ad-select"><option>全部周期</option><option>一年期</option><option>二年期</option><option>三年期</option></select>
+            <select class="ad-select"><option>全部状态</option><option>酿造中</option><option>已完成待提货</option><option>已提清</option></select>
+            <input class="ad-input" placeholder="缸编号 / 订单号" style="width:200px">
+            <button class="ad-btn primary">查询</button>
+          </div>
+          <table class="ad-table"><thead><tr><th>缸编号</th><th>认领人</th><th>周期</th><th>总瓶数</th><th>已提瓶数</th><th>酿造进度</th><th>状态</th><th>操作</th></tr></thead><tbody id="tb_jars"></tbody></table>
+          <div class="ad-pager"><span>共 1,286 条</span><div class="pg">«</div><div class="pg on">1</div><div class="pg">2</div><div class="pg">»</div></div>
+        </div></div>
+      </section>
+
+      <!-- ===== 套餐配置 ===== -->
+      <section class="ad-mod" id="m_packages">
+        <div class="ad-page-hd"><div><h2>套餐配置</h2><div class="desc">认领周期的价格、瓶数与权益规则</div></div><button class="ad-btn primary">保存配置</button></div>
+        <div class="ad-card"><div class="bd">
+          <table class="ad-table"><thead><tr><th>周期</th><th>总价(元)</th><th>瓶数</th><th>单瓶价(元)</th><th>家庭日次数</th><th>尝鲜装</th><th>状态</th></tr></thead><tbody>
+            <tr><td>一年期</td><td><input class="ad-input" style="width:90px;height:32px" value="8000"></td><td>200</td><td>40</td><td>3</td><td>无</td><td><span class="ad-tag green">启用</span></td></tr>
+            <tr><td>二年期</td><td><input class="ad-input" style="width:90px;height:32px" value="17000"></td><td>200</td><td>85</td><td>5</td><td>10 瓶</td><td><span class="ad-tag green">启用</span></td></tr>
+            <tr><td>三年期</td><td><input class="ad-input" style="width:90px;height:32px" value="26000"></td><td>200</td><td>130</td><td>7</td><td>20 瓶</td><td><span class="ad-tag green">启用</span></td></tr>
+          </tbody></table>
+          <p style="font-size:12px;color:var(--lp-ink-3);margin-top:12px;line-height:1.9">转期补差规则：<b>需补差价 =（目标周期单瓶价 − 当前周期单瓶价）× 剩余瓶数</b>。<br>一年期→二年期 单瓶补 ¥45（85 − 40）；一年期→三年期 单瓶补 ¥90（130 − 40）。例：剩余 100 瓶转二年期 = 45 × 100 = ¥4,500。仅可转一次，门槛为剩余瓶数 ≥ 100 瓶。</p>
+        </div></div>
+      </section>
+
+      <!-- ===== 酿造记录 ===== -->
+      <section class="ad-mod" id="m_brews">
+        <div class="ad-page-hd"><div><h2>酿造记录</h2><div class="desc">每月上传酿造反馈（图片 / 文字 / 视频）</div></div><button class="ad-btn primary">+ 上传本月记录</button></div>
+        <div class="ad-card"><div class="bd">
+          <div class="ad-bar">
+            <select class="ad-select"><option>全部节点</option><option>制醅</option><option>翻缸</option><option>抽油</option><option>日晒夜露</option></select>
+            <input class="ad-input" placeholder="缸编号" style="width:160px"><button class="ad-btn primary">查询</button>
+          </div>
+          <table class="ad-table"><thead><tr><th>缸编号</th><th>月份</th><th>节点</th><th>内容类型</th><th>上传人</th><th>上传时间</th><th>操作</th></tr></thead><tbody id="tb_brews"></tbody></table>
+          <div class="ad-pager"><span>共 9,842 条</span><div class="pg">«</div><div class="pg on">1</div><div class="pg">2</div><div class="pg">»</div></div>
+        </div></div>
+      </section>
+
+      <!-- ===== 家庭日活动 ===== -->
+      <section class="ad-mod" id="m_family">
+        <div class="ad-page-hd"><div><h2>家庭日活动</h2><div class="desc">节点活动与报名名单管理（名额不限）</div></div><button class="ad-btn primary">+ 新建活动</button></div>
+        <div class="ad-card"><div class="bd">
+          <table class="ad-table"><thead><tr><th>活动名称</th><th>节点</th><th>日期</th><th>地点</th><th>报名人数</th><th>状态</th><th>操作</th></tr></thead><tbody id="tb_family"></tbody></table>
+        </div></div>
+        <div class="ad-card"><div class="hd"><div class="t">报名名单（翻缸体验日 · 2026-11-08）</div><button class="ad-btn plain sm">导出 Excel</button></div><div class="bd">
+          <table class="ad-table"><thead><tr><th>联系人</th><th>手机号</th><th>参加人数</th><th>随行成员</th><th>报名时间</th><th>状态</th></tr></thead><tbody id="tb_family_sign"></tbody></table>
+        </div></div>
+      </section>
+
+      <!-- ===== 订单与提货 ===== -->
+      <section class="ad-mod" id="m_orders">
+        <div class="ad-page-hd"><div><h2>订单与提货</h2><div class="desc">认领订单、提货单与发货管理</div></div></div>
+        <div class="ad-card"><div class="bd">
+          <div class="ad-bar">
+            <select class="ad-select"><option>全部类型</option><option>认领订单</option><option>提货单</option><option>转期订单</option></select>
+            <select class="ad-select"><option>全部状态</option><option>待酿造</option><option>待发货</option><option>已发货</option><option>已完成</option><option>已退款</option></select>
+            <input class="ad-input" placeholder="订单号" style="width:200px"><button class="ad-btn primary">查询</button>
+          </div>
+          <table class="ad-table"><thead><tr><th>订单号</th><th>类型</th><th>用户</th><th>金额</th><th>瓶数</th><th>快递单号</th><th>状态</th><th>下单时间</th><th>操作</th></tr></thead><tbody id="tb_orders"></tbody></table>
+          <div class="ad-pager"><span>共 3,512 条</span><div class="pg">«</div><div class="pg on">1</div><div class="pg">2</div><div class="pg">»</div></div>
+        </div></div>
+      </section>
+
+      <!-- ===== 转期管理 ===== -->
+      <section class="ad-mod" id="m_transfer">
+        <div class="ad-page-hd"><div><h2>转期管理</h2><div class="desc">用户补差升级周期（系统自动校验 · 无需审核）</div></div></div>
+        <div class="ad-card"><div class="bd">
+          <table class="ad-table"><thead><tr><th>转期单号</th><th>用户</th><th>原周期</th><th>目标周期</th><th>剩余瓶数</th><th>补差金额</th><th>支付状态</th><th>生效时间</th><th>操作</th></tr></thead><tbody id="tb_transfer"></tbody></table>
+        </div></div>
+      </section>
+
+      <!-- ===== 尝鲜装管理 ===== -->
+      <section class="ad-mod" id="m_tasting">
+        <div class="ad-page-hd"><div><h2>尝鲜装管理</h2><div class="desc">满足条件的用户自动发放尝鲜装</div></div><button class="ad-btn primary">+ 手动补发</button></div>
+        <div class="ad-card"><div class="bd">
+          <table class="ad-table"><thead><tr><th>用户</th><th>档位</th><th>应发</th><th>已发</th><th>发放方式</th><th>物流单号</th><th>状态</th></tr></thead><tbody id="tb_tasting"></tbody></table>
+        </div></div>
+      </section>
+
+      <!-- ===== 消息管理 ===== -->
+      <section class="ad-mod" id="m_messages">
+        <div class="ad-page-hd"><div><h2>消息管理</h2><div class="desc">短信 / 订阅消息 / 站内消息 三类渠道</div></div><button class="ad-btn primary">+ 新建群发</button></div>
+        <div class="ad-card"><div class="bd">
+          <div class="ad-bar">
+            <select class="ad-select"><option>全部渠道</option><option>短信</option><option>订阅消息</option><option>站内消息</option></select>
+            <select class="ad-select"><option>全部类型</option><option>家庭日提醒</option><option>酿造反馈</option><option>尝鲜装发货</option><option>提货发货</option></select>
+            <button class="ad-btn primary">查询</button>
+          </div>
+          <table class="ad-table"><thead><tr><th>消息标题</th><th>渠道</th><th>类型</th><th>触达人数</th><th>发送时间</th><th>状态</th><th>操作</th></tr></thead><tbody id="tb_messages"></tbody></table>
+        </div></div>
+      </section>
+
+      <!-- ===== 内容管理 ===== -->
+      <section class="ad-mod" id="m_content">
+        <div class="ad-page-hd"><div><h2>内容管理</h2><div class="desc">首页 banner、酿造工艺视频、品牌宣传</div></div></div>
+        <div class="ad-2col">
+          <div class="ad-card"><div class="hd"><div class="t">首页轮播 / banner</div><button class="ad-btn plain sm">编辑</button></div><div class="bd">
+            <div class="ad-row">
+              <div class="ad-thumb"></div><div class="ad-thumb"></div><div class="ad-thumb"></div>
+            </div>
+            <p style="font-size:12px;color:var(--lp-ink-3);margin-top:12px">建议尺寸 750×340，最多 5 张。</p>
+          </div></div>
+          <div class="ad-card"><div class="hd"><div class="t">酿造工艺宣传视频</div><button class="ad-btn plain sm">替换</button></div><div class="bd">
+            <div class="lp-video" style="height:150px"><div class="ply"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div><div class="cap">春制曲·夏制胚·秋晒油·冬酿香</div></div>
+            <p style="font-size:12px;color:var(--lp-ink-3);margin-top:12px">首页品牌宣传区展示，建议 60s 内。</p>
+          </div></div>
+        </div>
+        <div class="ad-card"><div class="hd"><div class="t">品牌故事</div><button class="ad-btn plain sm">编辑</button></div><div class="bd">
+          <p style="font-size:13px;color:var(--lp-ink-2);line-height:1.9;margin:0">龙牌酱油源于清乾隆五年（1740 年）湘潭龚庆祥酱园，1915 年与贵州茅台同获巴拿马万国博览会金奖，是商务部认定的「中华老字号」。恪守「用料必究、制作必精、配兑必严、环境必洁」的古训，以传统小缸天然晒露工艺，历经二十余道工序精酿而成。</p>
+        </div></div>
+      </section>
+
+      <!-- ===== 系统设置 ===== -->
+      <section class="ad-mod" id="m_settings">
+        <div class="ad-page-hd"><div><h2>系统设置</h2><div class="desc">主题色、微信支付、短信、权限与数据字典</div></div></div>
+        <div class="ad-card"><div class="hd"><div class="t">界面主题色</div></div><div class="bd">
+          <div class="ad-row">
+            <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="AD.setTheme('#9E2A1E',this)"><span style="width:26px;height:26px;border-radius:50%;background:#9E2A1E;display:inline-block"></span><span style="font-size:13px">龙牌朱砂红（当前）</span></div>
+            <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="AD.setTheme('#A8843A',this)"><span style="width:26px;height:26px;border-radius:50%;background:#A8843A;display:inline-block"></span><span style="font-size:13px">鎏金</span></div>
+            <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="AD.setTheme('#3A5A8C',this)"><span style="width:26px;height:26px;border-radius:50%;background:#3A5A8C;display:inline-block"></span><span style="font-size:13px">商务蓝</span></div>
+          </div>
+          <p style="font-size:12px;color:var(--lp-ink-3);margin-top:12px">基于 likeadmin 主题色机制，修改后应用于菜单高亮与管理端主按钮。</p>
+        </div></div>
+        <div class="ad-card"><div class="hd"><div class="t">第三方配置</div></div><div class="bd">
+          <table class="ad-table"><thead><tr><th>配置项</th><th>说明</th><th>状态</th></tr></thead><tbody>
+            <tr><td>微信支付</td><td>认领 / 提货 / 转期 在线支付</td><td><span class="ad-tag green">已启用</span></td></tr>
+            <tr><td>短信服务</td><td>阿里云短信 / 腾讯云短信</td><td><span class="ad-tag green">已启用</span></td></tr>
+            <tr><td>微信订阅消息</td><td>家庭日 / 发货提醒推送</td><td><span class="ad-tag green">已启用</span></td></tr>
+            <tr><td>对象存储</td><td>酿造记录图片视频</td><td><span class="ad-tag green">已启用</span></td></tr>
+          </tbody></table>
+        </div></div>
+        <div class="ad-card"><div class="hd"><div class="t">权限与账号</div></div><div class="bd">
+          <div class="ad-row"><button class="ad-btn plain">管理员管理</button><button class="ad-btn plain">角色权限</button><button class="ad-btn plain">操作日志</button><button class="ad-btn plain">数据字典</button></div>
+        </div></div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- 通用弹窗 -->
+<div class="ad-mask" id="adMask"><div class="ad-dialog"><div class="dh"><span id="dlgTitle">详情</span><span style="cursor:pointer;font-size:22px;color:var(--lp-ink-3)" onclick="AD.closeDlg()">×</span></div><div class="db" id="dlgBody"></div><div class="df"><button class="ad-btn plain" onclick="AD.closeDlg()">关闭</button><button class="ad-btn primary" id="dlgOk">确定</button></div></div></div>
+
+<script src="assets/js/admin.js"></script>
+</body>
+</html>

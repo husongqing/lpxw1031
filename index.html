@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>龙牌湘味 · 认领酱缸（用户端）</title>
+<script>
+/* 设备判定：真手机/平板才全屏无壳；电脑浏览器（无论窗口多窄）始终显示手机外壳 */
+(function(){
+  var ua = navigator.userAgent || '';
+  var small = Math.min(window.screen.width, window.screen.height) <= 820;
+  var isTouchPhone = /Android|iPhone|iPod|iPad|Windows Phone|HarmonyOS|Mobile Safari/i.test(ua)
+                     || (navigator.maxTouchPoints > 1 && small);
+  var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  if (isTouchPhone && (coarse || small || navigator.maxTouchPoints > 1)) document.documentElement.className += ' is-mobile';
+})();
+</script>
+<link rel="stylesheet" href="assets/css/brand.css">
+<link rel="stylesheet" href="assets/css/user.css">
+</head>
+<body>
+<div class="lp-stage">
+  <div class="hint">桌面演示：用户端小程序（iPhone 外壳）。用手机访问将自动全屏无外壳。</div>
+  <div class="lp-fit">
+  <div class="lp-device">
+    <div class="lp-notch"></div>
+    <div class="lp-home"></div>
+    <div class="lp-screen-wrap">
+      <div class="lp-app" id="app">
+
+        <!-- 全局状态栏 -->
+        <div class="lp-statusbar">
+          <span id="clk">9:41</span>
+          <span class="ic">
+            <svg viewBox="0 0 24 24"><path d="M2 17h3v-7H2v7zm6 0h3V7H8v10zm6 0h3v-4h-3v4zm6 0h3V4h-3v13z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 4C7 4 2.7 6 0 9l12 15L24 9c-2.7-3-7-5-12-5z"/></svg>
+            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="4" y="9" width="14" height="6" rx="1" fill="#0c0a08"/><rect x="20" y="10" width="2" height="4" rx="1"/></svg>
+          </span>
+        </div>
+
+        <!-- 屏幕区 -->
+        <div class="lp-screens" id="screens">
+
+          <!-- ========== 加载页 ========== -->
+          <section class="lp-screen on" id="pg_splash">
+            <div class="lp-splash" data-go="home">
+              <div class="seal-big"><div class="lp-seal lp-seal-lg"><span>龍牌<br>湘味</span></div></div>
+              <div class="nm">龍牌湘味</div>
+              <div class="sub">认 领 酱 缸</div>
+              <div class="bar"><i id="splashBar"></i></div>
+              <div style="color:rgba(246,233,200,.7);font-size:11px;letter-spacing:1px">古法酿造 · 一缸一鉴</div>
+            </div>
+          </section>
+
+          <!-- 登录不再单独成页：游客可直接浏览，需要认领/查看数据时弹出微信授权引导（见底部 #loginMask） -->
+
+          <!-- ========== 首页 ========== -->
+          <section class="lp-screen" id="pg_home">
+            <div class="lp-navbar dark hero">
+              <div class="nb-title">龙牌湘味 · 认领酱缸</div>
+            </div>
+            <div class="lp-body lp-scroll">
+              <div class="lp-hero" id="heroBanner">
+                <div class="bn-track">
+                  <div class="bn-slide is-on">
+                    <div class="bn-bg" style="background-image:url(assets/img/banner-1.jpg)"></div>
+                    <div class="bn-mask"></div>
+                    <div class="bn-tag">古法晒露</div>
+                    <div class="bn-body">
+                      <div class="bn-top"><div class="lp-seal"><span>龍牌<br>湘味</span></div>
+                        <div class="bn-eyebrow">始于清乾隆 1740<small>中华老字号 · 巴拿马金奖</small></div></div>
+                      <h1>二百口缸，一方酱园</h1>
+                      <p>斗笠覆缸，日晒夜露，风吹雨洗净酱香。</p>
+                    </div>
+                  </div>
+                  <div class="bn-slide">
+                    <div class="bn-bg" style="background-image:url(assets/img/banner-2.jpg)"></div>
+                    <div class="bn-mask"></div>
+                    <div class="bn-tag">认领计划</div>
+                    <div class="bn-body">
+                      <div class="bn-top"><div class="lp-seal"><span>龍牌<br>湘味</span></div>
+                        <div class="bn-eyebrow">一缸一鉴 · 全程可见<small>缸上题名 · 专属木牌</small></div></div>
+                      <h1>认领一缸属于自己的酱</h1>
+                      <p>小缸天然晒露，从制醅到抽油，全程见证匠心酿造。</p>
+                    </div>
+                  </div>
+                  <div class="bn-slide">
+                    <div class="bn-bg" style="background-image:url(assets/img/banner-3.jpg)"></div>
+                    <div class="bn-mask"></div>
+                    <div class="bn-tag">四时节气</div>
+                    <div class="bn-body">
+                      <div class="bn-top"><div class="lp-seal"><span>龍牌<br>湘味</span></div>
+                        <div class="bn-eyebrow">春制曲 · 夏制胚<small>秋晒油 · 冬酿香</small></div></div>
+                      <h1>一年一轮回</h1>
+                      <p>三百日伏天晒露，只取头道原油，挂壁生香。</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="bn-dots" id="heroDots"><i class="on" data-i="0"></i><i data-i="1"></i><i data-i="2"></i></div>
+                <div class="bn-idx"><b id="heroCur">01</b> / 03</div>
+              </div>
+
+              <!-- 工艺视频宣传 -->
+              <div style="padding:14px 14px 4px">
+                <div class="lp-sec-title">酿造工艺</div>
+                <div class="lp-video" onclick="LP.playVideo()">
+                  <div class="vd-bg" style="background-image:url(assets/img/craft-cover.jpg)"></div>
+                  <div class="vd-mask"></div>
+                  <div class="vd-tag">古法酿造实录</div>
+                  <div class="ply"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+                  <div class="cap">春制曲 · 夏制胚 · 秋晒油 · 冬酿香</div>
+                  <div class="vd-dur">02:18</div>
+                </div>
+              </div>
+
+              <!-- 认领入口 -->
+              <div style="padding:14px 14px 0">
+                <div class="lp-sec-title">认领酱缸</div>
+                <div class="lp-card lp-card-pad lp-fret" style="background:linear-gradient(135deg,#FFFDF7,#F4E8CF);cursor:pointer" data-go="cycle">
+                  <div style="display:flex;align-items:center;gap:14px">
+                    <div style="flex:1">
+                      <div style="font-family:var(--lp-kai);font-size:19px;font-weight:800;color:var(--lp-brown)">开启你的专属酱缸</div>
+                      <div style="font-size:12px;color:var(--lp-ink-3);margin-top:5px">一年 / 二年 / 三年期可选 · 含家庭日参观</div>
+                    </div>
+                    <button class="lp-btn lp-btn-primary" style="padding:10px 18px">立即认领</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 六大入口 -->
+              <div style="padding:16px 14px 0">
+                <div class="lp-sec-title">我的酿造</div>
+                <div class="lp-grid c3">
+                  <div class="lp-entry" data-go="myjars"><div class="ico"><svg viewBox="0 0 24 24"><path d="M5 21V6l7-3 7 3v15M5 11h14"/></svg></div><div class="t">我的酱缸</div><div class="s">查看酿造进度</div></div>
+                  <div class="lp-entry" data-go="family"><div class="ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5M16 6a3 3 0 010 6M21 20a4 4 0 00-4-4"/></svg></div><div class="t">家庭日</div><div class="s">预约参观报名</div></div>
+                  <div class="lp-entry" data-go="orders"><div class="ico"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6zM15 2v5h5M9 13h6M9 17h6"/></svg></div><div class="t">我的订单</div><div class="s">认领与提货</div></div>
+                  <div class="lp-entry" data-go="pickup"><div class="ico"><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h5l3 3v3h-8M7 19a2 2 0 100-.01M18 19a2 2 0 100-.01"/></svg></div><div class="t">申请提货</div><div class="s">分批或一次</div></div>
+                  <div class="lp-entry" data-go="transfer"><div class="ico"><svg viewBox="0 0 24 24"><path d="M4 12h14M12 6l6 6-6 6M20 4v16"/></svg></div><div class="t">酱缸转期</div><div class="s">补足差价</div></div>
+                  <div class="lp-entry" data-go="vip"><div class="ico"><svg viewBox="0 0 24 24"><path d="M3 8l4 4 5-7 5 7 4-4-2 12H5z"/></svg></div><div class="t">会员权益</div><div class="s">专属特权</div></div>
+                </div>
+              </div>
+              <div style="height:80px"></div>
+            </div>
+          </section>
+
+          <!-- ========== 认领选周期 ========== -->
+          <section class="lp-screen" id="pg_cycle">
+            <div class="lp-navbar"><button class="nb-btn" data-go="home"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">认领酱缸</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="lp-sec-title">选择认领周期</div>
+              <p style="color:var(--lp-ink-3);font-size:12.5px;margin:-4px 0 14px">每缸 200 瓶，古法小缸晒露，周期越长风味越醇。</p>
+
+              <div class="lp-plan sel" data-cycle="1" onclick="LP.selCycle(this)">
+                <div class="yr">一年期</div>
+                <div class="big"><span class="cur">¥</span>8000</div>
+                <div class="meta">200 瓶 · 约 <b>40</b> 元/瓶<br>节点：制醅 · 翻缸 · 抽油（3 次家庭日）<br>无尝鲜装</div>
+              </div>
+              <div class="lp-plan" data-cycle="2" onclick="LP.selCycle(this)" style="margin-top:14px">
+                <div class="ribbon">热门</div>
+                <div class="yr">二年期</div>
+                <div class="big"><span class="cur">¥</span>17000</div>
+                <div class="meta">200 瓶 · 约 <b>85</b> 元/瓶<br>节点：制醅 · 翻缸 · 抽油（5 次家庭日）<br>满一年送 <b>10</b> 瓶尝鲜装</div>
+              </div>
+              <div class="lp-plan" data-cycle="3" onclick="LP.selCycle(this)" style="margin-top:14px">
+                <div class="yr">三年期</div>
+                <div class="big"><span class="cur">¥</span>26000</div>
+                <div class="meta">200 瓶 · 约 <b>130</b> 元/瓶<br>节点：制醅 · 翻缸 · 抽油（7 次家庭日）<br>满二年送 <b>20</b> 瓶尝鲜装</div>
+              </div>
+            </div>
+            <div style="padding:12px 14px;background:#FFFDF7;border-top:1px solid var(--lp-line-soft)">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:13px">
+                <span style="color:var(--lp-ink-2)">合计</span>
+                <span class="lp-price" style="font-size:22px"><span class="cur">¥</span><span id="cyclePrice">8000</span></span>
+              </div>
+              <button class="lp-btn lp-btn-primary lp-btn-block" data-go="pay">下一步：确认认领</button>
+            </div>
+          </section>
+
+          <!-- ========== 认领确认/支付 ========== -->
+          <section class="lp-screen" id="pg_pay">
+            <div class="lp-navbar"><button class="nb-btn" data-go="cycle"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">确认认领</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="lp-card lp-card-pad">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span class="lp-tag brown">认领订单</span>
+                  <span style="font-size:12px;color:var(--lp-ink-3)">订单号 LP20261030001</span>
+                </div>
+                <div style="margin-top:14px;font-family:var(--lp-kai);font-size:18px;font-weight:800;color:var(--lp-brown)" id="payTitle">一年期酱缸认领</div>
+                <div style="font-size:12.5px;color:var(--lp-ink-2);margin-top:6px">200 瓶 · 古法小缸晒露酿造</div>
+                <div class="lp-progress" style="margin-top:12px"><i style="width:0%"></i></div>
+                <div style="font-size:11px;color:var(--lp-ink-3);margin-top:6px">预计 <b id="payFinish">2027-10</b> 完成酿造</div>
+              </div>
+
+              <div class="lp-sec-title" style="margin-top:18px">认领人信息</div>
+              <div class="lp-field"><label>姓名</label><input class="lp-input" value="张酱友"></div>
+              <div class="lp-field"><label>手机号</label><input class="lp-input" value="138 0000 8888"></div>
+              <div class="lp-field"><label>题字（缸上木牌，可选）</label><input class="lp-input" placeholder="如：张府家酿 · 甲辰年"></div>
+
+              <div class="lp-sec-title" style="margin-top:6px">支付方式</div>
+              <div class="lp-row" style="border:none"><div class="av" style="background:var(--lp-red-wash);color:var(--lp-red)">微</div><div class="main"><div class="t">微信支付</div></div><div class="rt"><svg viewBox="0 0 24 24" style="stroke:var(--lp-red);fill:none;stroke-width:2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="var(--lp-red)"/></svg></div></div>
+            </div>
+            <div style="padding:12px 14px;background:#FFFDF7;border-top:1px solid var(--lp-line-soft)">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                <span style="font-size:13px;color:var(--lp-ink-2)">应付</span>
+                <span class="lp-price" style="font-size:22px"><span class="cur">¥</span><span id="payPrice">8000</span></span>
+              </div>
+              <button class="lp-btn lp-btn-primary lp-btn-block" onclick="LP.pay(this)">确认支付 ¥<span id="payBtnPrice">8000</span></button>
+            </div>
+          </section>
+
+          <!-- ========== 我的酱缸 ========== -->
+          <section class="lp-screen" id="pg_myjars">
+            <div class="lp-navbar"><div class="nb-title">我的酱缸</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="lp-card lp-card-pad" style="background:linear-gradient(135deg,var(--lp-red),var(--lp-red-deep));color:#F6E9C8;margin-bottom:14px">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                  <div><div style="font-family:var(--lp-kai);font-size:18px;font-weight:800">张府家酿 · 甲辰年</div>
+                  <div style="font-size:12px;opacity:.85;margin-top:4px">一年期 · 200 瓶 · 第 6 月</div></div>
+                  <span class="lp-tag gold">酿造中</span>
+                </div>
+                <div class="lp-progress" style="margin-top:14px;background:rgba(0,0,0,.2)"><i style="width:48%"></i></div>
+                <div style="font-size:11px;opacity:.8;margin-top:6px">进度 48% · 距出缸约 6 个月</div>
+              </div>
+
+              <div class="lp-row" data-go="jardetail">
+                <div class="av">缸</div>
+                <div class="main"><div class="t">一号酱缸（一年期）</div><div class="s">已酿 6 月 · 翻缸完成 · 待抽油</div></div>
+                <div class="rt"><span class="lp-tag">查看</span></div>
+              </div>
+              <div class="lp-row" data-go="jardetail">
+                <div class="av" style="background:rgba(67,39,26,.1);color:var(--lp-brown-2)">缸</div>
+                <div class="main"><div class="t">二号酱缸（三年期）</div><div class="s">已酿 14 月 · 尝鲜装已发 20 瓶</div></div>
+                <div class="rt"><span class="lp-tag gold">尝鲜中</span></div>
+              </div>
+              <button class="lp-btn lp-btn-gold lp-btn-block" style="margin-top:16px" data-go="cycle">+ 再认领一缸</button>
+            </div>
+          </section>
+
+          <!-- ========== 酱缸详情 / 酿造进度 ========== -->
+          <section class="lp-screen" id="pg_jardetail">
+            <div class="lp-navbar"><button class="nb-btn" data-go="myjars"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">酿造进度</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="jd-hero">
+                <div class="jd-t">一号酱缸</div>
+                <div class="jd-s">一年期 · 张府家酿 · 甲辰年</div>
+                <div class="lp-progress" style="margin-top:14px;background:rgba(0,0,0,.25)"><i style="width:48%"></i></div>
+                <div class="jd-m">已酿 6 / 12 月 · 翻缸完成 · 剩余 160 瓶</div>
+              </div>
+
+              <div class="lp-sec-title">酿造历程</div>
+              <div class="lp-timeline">
+                <div class="lp-tl-item done">
+                  <div class="node"></div>
+                  <div class="tl-hd"><span class="tt">制醅入缸（第 1 月）</span><span class="tl-date">2026-05-12</span></div>
+                  <div class="td">黄豆蒸煮摊凉，拌入曲种制曲 48 小时，落入陶缸，注入 18% 盐水，缸口盖竹编斗笠，静置初发酵。</div>
+                  <div class="tl-pics">
+                    <img src="assets/img/brew-koji.jpg" alt="制曲" onclick="LP.viewImg(this)">
+                    <img src="assets/img/brew-mash.jpg" alt="酱醅入缸" onclick="LP.viewImg(this)">
+                  </div>
+                </div>
+
+                <div class="lp-tl-item done">
+                  <div class="node"></div>
+                  <div class="tl-hd"><span class="tt">翻缸（第 3 月）</span><span class="tl-date">2026-07-18</span></div>
+                  <div class="td">开缸翻醅、搅拌增氧，促进酯化上色。当日气温 34℃，酱醅由浅黄转为红褐，酯香初起。</div>
+                  <div class="tl-pics">
+                    <img src="assets/img/brew-yard.jpg" alt="晒场缸阵" onclick="LP.viewImg(this)">
+                    <img src="assets/img/brew-mash.jpg" alt="翻醅后的酱醅" onclick="LP.viewImg(this)">
+                    <img src="assets/img/brew-workshop.jpg" alt="酱园作坊" onclick="LP.viewImg(this)">
+                  </div>
+                </div>
+
+                <div class="lp-tl-item cur">
+                  <div class="node"></div>
+                  <div class="tl-hd"><span class="tt">日晒夜露（进行中）</span><span class="tl-date">2026-08 至今</span></div>
+                  <div class="td">小缸天然晒露，昼开夜盖，每日辰时搅缸一次。本月已进入酯化高峰，酱香日浓，每月更新酿造反馈。</div>
+                  <div class="tl-pics">
+                    <img src="assets/img/brew-yard2.jpg" alt="酱缸台" onclick="LP.viewImg(this)">
+                    <img src="assets/img/craft-cover.jpg" alt="树下陶缸" onclick="LP.viewImg(this)">
+                  </div>
+                </div>
+
+                <div class="lp-tl-item">
+                  <div class="node"></div>
+                  <div class="tl-hd"><span class="tt">抽油封坛（第 12 月）</span><span class="tl-date">预计 2027-05</span></div>
+                  <div class="td">抽取头道原油，灭菌灌装、封坛贴牌。完成后即可申请提货，也可分批提取。</div>
+                  <div class="tl-empty">尚未开始 · 届时上传现场记录</div>
+                </div>
+              </div>
+
+              <div class="lp-sec-title" style="margin-top:4px;display:flex;align-items:center;justify-content:space-between">
+                <span>月度反馈</span><span class="fb-count">已更新至第 6 月</span>
+              </div>
+
+              <div class="fb is-open" id="fb6">
+                <div class="fb-hd" onclick="LP.toggleFb(this)">
+                  <div class="fb-m">10<span>月</span></div>
+                  <div class="fb-hx">
+                    <div class="fb-t">第 6 月 · 晒场实录</div>
+                    <div class="fb-s">2026-10-15 · 匠人王师傅上传</div>
+                  </div>
+                  <div class="fb-ix"><span class="fb-b vd">视频</span><span class="fb-b pc">6 图</span></div>
+                  <svg class="fb-ar" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="fb-bd">
+                  <div class="fb-video" onclick="LP.playVideo()">
+                    <img src="assets/img/feed-video-6.jpg" alt="晒场实录">
+                    <div class="fb-vmask"></div>
+                    <div class="fb-vplay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+                    <div class="fb-vtag">晒场实录 · 02:18</div>
+                  </div>
+                  <p class="fb-p">金秋十月，湘潭晒场连日晴好。匠人每日辰时开缸翻醅，酱醅在日光下泛出琥珀光泽。本月气温 18–26℃，湿度适中，发酵进入酯化高峰，酱香日浓。特附现场视频与九宫格照片，请认领人检阅。</p>
+                  <div class="fb-grid">
+                    <img src="assets/img/brew-yard2.jpg" alt="酱缸台" onclick="LP.viewImg(this)">
+                    <img src="assets/img/brew-yard.jpg" alt="晒场缸阵" onclick="LP.viewImg(this)">
+                    <img src="assets/img/brew-mash.jpg" alt="酱醅" onclick="LP.viewImg(this)">
+                    <img src="assets/img/brew-workshop.jpg" alt="酱园作坊" onclick="LP.viewImg(this)">
+                    <img src="assets/img/craft-cover.jpg" alt="陶缸" onclick="LP.viewImg(this)">
+                    <img src="assets/img/banner-1.jpg" alt="缸阵" onclick="LP.viewImg(this)">
+                  </div>
+                </div>
+              </div>
+
+              <div class="fb" id="fb5">
+                <div class="fb-hd" onclick="LP.toggleFb(this)">
+                  <div class="fb-m">09<span>月</span></div>
+                  <div class="fb-hx">
+                    <div class="fb-t">第 5 月 · 初秋翻醅</div>
+                    <div class="fb-s">2026-09-16 · 匠人王师傅上传</div>
+                  </div>
+                  <div class="fb-ix"><span class="fb-b pc">4 图</span></div>
+                  <svg class="fb-ar" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="fb-bd">
+                  <p class="fb-p">初秋昼夜温差拉大，白天开缸晒露、夜里加盖竹席。酱醅色泽由红转深褐，酯香渐显，缸壁挂酱均匀。本月未录制视频，仅留存照片记录。</p>
+                  <div class="fb-grid g2">
+                    <img src="assets/img/brew-mash.jpg" alt="酱醅" onclick="LP.viewImg(this)">
+                    <img src="assets/img/brew-yard.jpg" alt="晒场" onclick="LP.viewImg(this)">
+                    <img src="assets/img/brew-koji.jpg" alt="曲料" onclick="LP.viewImg(this)">
+                    <img src="assets/img/brew-workshop.jpg" alt="作坊" onclick="LP.viewImg(this)">
+                  </div>
+                </div>
+              </div>
+
+              <div class="fb" id="fb4">
+                <div class="fb-hd" onclick="LP.toggleFb(this)">
+                  <div class="fb-m">08<span>月</span></div>
+                  <div class="fb-hx">
+                    <div class="fb-t">第 4 月 · 高温守缸</div>
+                    <div class="fb-s">2026-08-15 · 匠人王师傅上传</div>
+                  </div>
+                  <div class="fb-ix"><span class="fb-b tx">文字</span></div>
+                  <svg class="fb-ar" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="fb-bd">
+                  <p class="fb-p">本月持续高温，晒场每日浇水降温两次，缸口加盖遮阳帘。酱醅发酵旺盛，缸面浮起细密气泡，属正常现象。本月未拍摄影像，仅文字记录存档。</p>
+                </div>
+              </div>
+
+              <div style="height:6px"></div>
+            </div>
+            <div style="padding:12px 14px;background:#FFFDF7;border-top:1px solid var(--lp-line-soft);display:flex;gap:10px">
+              <button class="lp-btn lp-btn-ghost lp-btn-block" data-go="family">家庭日报名</button>
+              <button class="lp-btn lp-btn-primary lp-btn-block" data-go="service">联系客服</button>
+            </div>
+          </section>
+
+          <!-- ========== 家庭日列表 ========== -->
+          <section class="lp-screen" id="pg_family">
+            <div class="lp-navbar"><div class="nb-title">家庭日参观</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="lp-video" style="height:140px;margin-bottom:14px" data-go="familyreg">
+                <div class="ply"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+                <div class="cap">走进晒场 · 亲子酿造体验</div>
+              </div>
+              <div class="lp-row" data-go="familyreg"><div class="av" style="background:var(--lp-red-wash);color:var(--lp-red)">翻</div><div class="main"><div class="t">翻缸体验日</div><div class="s">2026-11-08 · 湘潭晒场 · 还剩 12 天</div></div><div class="rt"><span class="lp-tag ok">可报名</span></div></div>
+              <div class="lp-row" data-go="familyreg"><div class="av" style="background:var(--lp-red-wash);color:var(--lp-red)">抽</div><div class="main"><div class="t">抽油封坛日</div><div class="s">2027-02-14 · 湘潭晒场 · 名额不限</div></div><div class="rt"><span class="lp-tag ok">可报名</span></div></div>
+              <div class="lp-row" data-go="familyreg"><div class="av" style="background:rgba(67,39,26,.1);color:var(--lp-brown-2)">制</div><div class="main"><div class="t">制醅开工日</div><div class="s">2027-04-20 · 湘潭酱园 · 即将开放</div></div><div class="rt"><span class="lp-tag gray">未开放</span></div></div>
+            </div>
+          </section>
+
+          <!-- ========== 家庭日报名 ========== -->
+          <section class="lp-screen" id="pg_familyreg">
+            <div class="lp-navbar"><button class="nb-btn" data-go="family"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">活动报名</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="lp-card lp-card-pad">
+                <div style="font-family:var(--lp-kai);font-size:18px;font-weight:800;color:var(--lp-brown)">翻缸体验日</div>
+                <div style="font-size:12.5px;color:var(--lp-ink-2);margin-top:6px">2026-11-08（周日）09:30 · 湘潭 · 龙牌晒场</div>
+                <div style="font-size:12px;color:var(--lp-ink-3);margin-top:6px">名额不限 · 可携家人同行 · 现场体验翻缸、品鉴新酱</div>
+              </div>
+              <div class="lp-sec-title" style="margin-top:18px">报名信息</div>
+              <div class="lp-field"><label>联系人姓名</label><input class="lp-input" value="张酱友"></div>
+              <div class="lp-field"><label>联系电话</label><input class="lp-input" value="138 0000 8888"></div>
+              <div class="lp-field"><label>参加人数（含本人）</label><input class="lp-input" id="famNum" value="3" inputmode="numeric"></div>
+              <div class="lp-field"><label>随行成员（姓名/关系，可选）</label><textarea class="lp-input lp-textarea" placeholder="如：李梅（妻）、张小满（子）">李梅（妻）、张小满（子）</textarea></div>
+              <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--lp-ink-2);margin-top:-4px"><input type="checkbox" checked style="width:16px;height:16px;accent-color:var(--lp-red)"> 我已阅读并同意活动须知</label>
+            </div>
+            <div style="padding:12px 14px;background:#FFFDF7;border-top:1px solid var(--lp-line-soft)">
+              <button class="lp-btn lp-btn-primary lp-btn-block" onclick="LP.familySubmit(this)">提交报名</button>
+            </div>
+          </section>
+
+          <!-- ========== 订单列表 ========== -->
+          <section class="lp-screen" id="pg_orders">
+            <div class="lp-navbar"><div class="nb-title">我的订单</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="lp-row" id="rowUnpaid" onclick="LP.openOrder('unpaid')"><div class="av" style="background:var(--lp-red-wash);color:var(--lp-red)">付</div><div class="main"><div class="t">二年期酱缸认领 <span style="font-size:11px;color:var(--lp-ink-3);font-weight:400">#LP20261031001</span></div><div class="s">2026-10-31 · 应付 ¥17,000</div></div><div class="rt"><span class="lp-tag">待支付</span></div></div>
+              <div class="lp-row" id="rowPending" onclick="LP.openOrder('pending')"><div class="av" style="background:rgba(184,120,40,.14);color:#A2632B">待</div><div class="main"><div class="t">一年期酱缸认领 <span style="font-size:11px;color:var(--lp-ink-3);font-weight:400">#LP20261028003</span></div><div class="s">2026-10-28 · 实付 ¥8000</div></div><div class="rt"><span class="lp-tag warn">待酿造</span></div></div>
+              <div class="lp-row" onclick="LP.openOrder('brewing')"><div class="av" style="background:var(--lp-gold);color:#3A2410">认</div><div class="main"><div class="t">三年期酱缸认领</div><div class="s">2025-08-10 · 实付 ¥26000</div></div><div class="rt"><span class="lp-tag ok">酿造中</span></div></div>
+              <div class="lp-row" onclick="LP.openOrder('done')"><div class="av" style="background:var(--lp-gold);color:#3A2410">认</div><div class="main"><div class="t">一年期酱缸认领</div><div class="s">2026-04-20 · 实付 ¥8000</div></div><div class="rt"><span class="lp-tag">已完成</span></div></div>
+              <div class="lp-row" id="rowCanceled" onclick="LP.openOrder('canceled')"><div class="av" style="background:rgba(90,74,58,.1);color:var(--lp-ink-3)">取</div><div class="main"><div class="t">一年期酱缸认领 <span style="font-size:11px;color:var(--lp-ink-3);font-weight:400">#LP20260915002</span></div><div class="s">2026-09-15 下单 · 2026-09-16 取消</div></div><div class="rt"><span class="lp-tag gray">已取消</span></div></div>
+              <div class="lp-row" data-go="pickuplog"><div class="av" style="background:var(--lp-red-wash);color:var(--lp-red)">提</div><div class="main"><div class="t">提货单 #TH001</div><div class="s">2026-10-12 · 已发货 60 瓶</div></div><div class="rt"><span class="lp-tag gold">已发货</span></div></div>
+            </div>
+          </section>
+
+          <!-- ========== 订单详情（按状态动态渲染） ========== -->
+          <section class="lp-screen" id="pg_orderdetail">
+            <div class="lp-navbar"><button class="nb-btn" data-go="orders"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">订单详情</div></div>
+            <div class="lp-body lp-scroll pad" id="odBody"></div>
+            <div id="odFoot" style="padding:12px 14px;background:#FFFDF7;border-top:1px solid var(--lp-line-soft);display:flex;gap:10px"></div>
+          </section>
+
+          <!-- ========== 提货申请 ========== -->
+          <section class="lp-screen" id="pg_pickup">
+            <div class="lp-navbar"><button class="nb-btn" data-go="myjars"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">申请提货</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="lp-row" style="border:none;background:var(--lp-red-wash);border-radius:10px;padding:12px;margin-bottom:14px">
+                <div class="main"><div class="t" style="color:var(--lp-red)">剩余可提 140 瓶</div><div class="s">本提货年度已提 1 次，尚可提 3 次（按首次提货日滚动 12 个月）</div></div>
+              </div>
+              <div class="lp-sec-title">提货方式</div>
+              <div style="display:flex;gap:10px;margin-bottom:14px">
+                <div class="lp-plan sel" style="flex:1;padding:14px;text-align:center" data-ptype="once" onclick="LP.selPType(this)"><div class="yr" style="font-size:16px">一次性提货</div><div class="meta" style="margin-top:4px">提完全部剩余</div></div>
+                <div class="lp-plan" style="flex:1;padding:14px;text-align:center" data-ptype="batch" onclick="LP.selPType(this)"><div class="yr" style="font-size:16px">分批提货</div><div class="meta" style="margin-top:4px">每次瓶数不限</div></div>
+              </div>
+              <div class="lp-field"><label>本次提货瓶数</label><input class="lp-input" id="pickNum" value="40"></div>
+              <div class="lp-sec-title">收货信息</div>
+              <div id="pickAddr"></div>
+              <button class="addr-add" onclick="LP.show('addaddr')">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增收货地址
+              </button>
+            </div>
+            <div style="padding:12px 14px;background:#FFFDF7;border-top:1px solid var(--lp-line-soft)">
+              <button class="lp-btn lp-btn-primary lp-btn-block" onclick="LP.pickupSubmit(this)">提交提货申请</button>
+            </div>
+          </section>
+
+          <!-- ========== 新增收货地址 ========== -->
+          <section class="lp-screen" id="pg_addaddr">
+            <div class="lp-navbar"><button class="nb-btn" data-go="pickup"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">新增收货地址</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="lp-field"><label>收货人</label><input class="lp-input" id="adName" placeholder="请输入收货人姓名"></div>
+              <div class="lp-field"><label>手机号</label><input class="lp-input" id="adTel" placeholder="请输入 11 位手机号" inputmode="numeric" maxlength="11"></div>
+              <div class="lp-field">
+                <label>所在地区</label>
+                <div class="ad-region" id="adRegion" onclick="LP.pickRegion()">
+                  <span class="rg-text">请选择省 / 市 / 区</span>
+                  <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+                </div>
+              </div>
+              <div class="lp-field"><label>详细地址</label><textarea class="lp-input lp-textarea" id="adDetail" placeholder="街道、门牌号、小区楼栋与门牌（例：窑湾街道龙牌里 8 栋 1 单元 302）"></textarea></div>
+              <div class="lp-field">
+                <label>地址标签</label>
+                <div class="ad-chips" id="adTags">
+                  <span class="ad-chip on" onclick="LP.pickTag(this)">家</span>
+                  <span class="ad-chip" onclick="LP.pickTag(this)">公司</span>
+                  <span class="ad-chip" onclick="LP.pickTag(this)">其他</span>
+                </div>
+              </div>
+
+              <div class="ad-def">
+                <div class="tx"><div class="t">设为默认地址</div><div class="s">提货与寄送时优先使用该地址</div></div>
+                <label class="ad-sw"><input type="checkbox" id="adDefault" checked><i></i></label>
+              </div>
+
+              <div class="ad-note">
+                <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
+                <span>酒类寄送需实名，收货人姓名请与身份证一致；偏远地区可能转邮政配送。</span>
+              </div>
+            </div>
+            <div style="padding:12px 14px;background:#FFFDF7;border-top:1px solid var(--lp-line-soft)">
+              <button class="lp-btn lp-btn-primary lp-btn-block" onclick="LP.saveAddr()">保存并使用</button>
+            </div>
+          </section>
+
+          <!-- ========== 提货记录 ========== -->
+          <section class="lp-screen" id="pg_pickuplog">
+            <div class="lp-navbar"><button class="nb-btn" data-go="orders"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">提货记录</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="lp-row" style="border:none" onclick="LP.show('shipdetail')"><div class="av" style="background:var(--lp-ok);color:#fff">✓</div><div class="main"><div class="t">已发货 · 60 瓶（第1次）</div><div class="s">2026-10-12 · 顺丰速运</div></div><div class="rt"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+              <div class="lp-row" style="border:none"><div class="av" style="background:var(--lp-gold);color:#3A2410">待</div><div class="main"><div class="t">待发货 · 40 瓶（第2次）</div><div class="s">2026-10-20 提交 · 预计 3 日内发出</div></div><div class="rt" style="color:var(--lp-warn)">处理中</div></div>
+              <div class="lp-row" style="border:none"><div class="av" style="background:rgba(67,39,26,.1);color:var(--lp-brown-2)">余</div><div class="main"><div class="t">剩余可提 100 瓶</div><div class="s">本提货年度还可提 2 次</div></div><div class="rt" style="color:var(--lp-ink-3)" data-go="pickup">去提货</div></div>
+              <div class="ad-note" style="margin-top:16px">
+                <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
+                <span>平台不提供实时物流跟踪。包裹发出后，可在记录中点开查看快递公司与运单号，前往快递官网自行查询。</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========== 发货详情 ========== -->
+          <section class="lp-screen" id="pg_shipdetail">
+            <div class="lp-navbar"><button class="nb-btn" data-go="pickuplog"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">发货详情</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="ship-hero">
+                <div class="ship-ex">顺丰速运</div>
+                <div class="ship-no">
+                  <span id="shipCode">SF1234 5678 9012</span>
+                  <button class="copy-btn" onclick="LP.copyCode()">复制</button>
+                </div>
+                <div class="ship-hint">发货 2026-10-12 14:20</div>
+              </div>
+
+              <div class="lp-sec-title">提货单信息</div>
+              <div class="lp-card lp-card-pad" style="font-size:12.5px;line-height:2;color:var(--lp-ink-2)">
+                <div style="display:flex;justify-content:space-between"><span>提货单号</span><span>#TH001</span></div>
+                <div style="display:flex;justify-content:space-between"><span>所属酱缸</span><span>一号酱缸 · 一年期</span></div>
+                <div style="display:flex;justify-content:space-between"><span>提货方式</span><span>分批提货 · 第 1 次</span></div>
+                <div style="display:flex;justify-content:space-between"><span>本单瓶数</span><span>60 瓶 × 500ml</span></div>
+                <div style="display:flex;justify-content:space-between"><span>发货时间</span><span>2026-10-12 14:20</span></div>
+              </div>
+
+              <div class="lp-sec-title">收货信息</div>
+              <div class="ship-addr">
+                <div class="pin"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12zM12 11a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"/></svg></div>
+                <div class="main"><div class="t">张酱友 138****8888</div><div class="s">湖南省湘潭市雨湖区窑湾街道龙牌里 8 栋 1 单元 302</div></div>
+              </div>
+
+              <div class="lp-sec-title">包裹内容</div>
+              <div class="goods-li">
+                <div class="thumb"><img src="assets/img/craft-cover.jpg" alt="古法酱油"></div>
+                <div class="main">
+                  <div class="t">龙牌湘味 · 古法晒露酱油</div>
+                  <div class="s">一年期 · 500ml / 瓶</div>
+                  <div class="p">60 瓶</div>
+                </div>
+              </div>
+
+              <div class="ad-note" style="margin-top:16px">
+                <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
+                <span>本平台不提供实时物流轨迹。查询包裹位置，请复制运单号后前往顺丰速运官网（sf-express.com）或致电 95338 查询。</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========== 退款申请 ========== -->
+          <section class="lp-screen" id="pg_refund">
+            <div class="lp-navbar"><button class="nb-btn" data-go="orderdetail"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">申请退款</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="lp-card lp-card-pad" style="display:flex;gap:11px;align-items:flex-start">
+                <div class="av" style="width:42px;height:42px;border-radius:11px;flex:none;display:flex;align-items:center;justify-content:center;background:rgba(184,120,40,.14);color:#A2632B;font-family:var(--lp-kai);font-weight:800">待</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-weight:700;font-size:14px;color:var(--lp-ink)">一年期酱缸认领</div>
+                  <div style="font-size:11.5px;color:var(--lp-ink-3);margin-top:4px">订单号 LP20261028003 · 实付 ¥8000</div>
+                  <div style="font-size:11.5px;color:var(--lp-ink-3);margin-top:2px">状态：待酿造（尚未开工，无酿造记录）</div>
+                </div>
+              </div>
+
+              <div class="refund-amt">
+                <div class="lb">可退金额</div>
+                <div class="num"><span class="cur">¥</span>8,000<span class="u">全额</span></div>
+                <div class="tip">酿造尚未开始，可全额退款；款项原路退回微信支付</div>
+              </div>
+
+              <div class="lp-sec-title">退款原因</div>
+              <div class="rf-reasons" id="rfReasons">
+                <div class="rf-opt on" onclick="LP.pickReason(this)"><i></i><span>计划有变，暂不认领</span></div>
+                <div class="rf-opt" onclick="LP.pickReason(this)"><i></i><span>想改选其他周期，重新下单</span></div>
+                <div class="rf-opt" onclick="LP.pickReason(this)"><i></i><span>下错单 / 重复支付</span></div>
+                <div class="rf-opt" onclick="LP.pickReason(this)"><i></i><span>其他原因</span></div>
+              </div>
+
+              <div class="lp-field" style="margin-top:16px">
+                <label>补充说明（选填）</label>
+                <textarea class="lp-input lp-textarea" id="rfNote" placeholder="可填写具体情况，便于客服跟进（选填）"></textarea>
+              </div>
+
+              <div class="lp-sec-title">退款去向</div>
+              <div class="lp-card lp-card-pad" style="display:flex;align-items:center;gap:10px">
+                <div style="width:34px;height:34px;border-radius:9px;background:rgba(63,122,75,.12);display:flex;align-items:center;justify-content:center;flex:none">
+                  <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--lp-ok);fill:none;stroke-width:1.9"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg>
+                </div>
+                <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--lp-brown)">原路退回 · 微信支付</div><div style="font-size:11px;color:var(--lp-ink-3);margin-top:3px">提交后 1–3 个工作日到账</div></div>
+              </div>
+
+              <div class="ad-note" style="margin-top:14px">
+                <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
+                <span>退款成功后，本订单对应的缸号与「缸上题字」将被释放，如需再次认领请重新下单。酿造一旦开始，线上退款入口关闭，需联系客服线下沟通。</span>
+              </div>
+            </div>
+            <div style="padding:12px 14px;background:#FFFDF7;border-top:1px solid var(--lp-line-soft)">
+              <button class="lp-btn lp-btn-primary lp-btn-block" onclick="LP.refundSubmit()">提交退款申请</button>
+            </div>
+          </section>
+
+          <!-- ========== 转期申请 ========== -->
+          <section class="lp-screen" id="pg_transfer">
+            <div class="lp-navbar"><button class="nb-btn" data-go="orderdetail"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">酱缸转期</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="lp-box" style="background:var(--lp-red-wash);border-radius:10px;padding:12px;margin-bottom:14px">
+                <div class="t" style="color:var(--lp-red);font-size:14px;font-weight:800" id="transferInfo">当前：一年期 · 单瓶 ¥40 · 剩余 160 瓶</div>
+                <div class="s" style="font-size:11.5px;line-height:1.7">转期门槛：剩余瓶数 ≥ 100 瓶，且仅可转一次</div>
+              </div>
+
+              <div class="lp-sec-title">选择目标周期</div>
+              <div class="lp-plan sel" data-tcycle="2" onclick="LP.selTcycle(this)" style="margin-bottom:12px">
+                <div class="yr">转为二年期</div>
+                <div class="big"><span class="cur">补差 ¥</span>7,200</div>
+                <div class="meta">单瓶差价 45 元（85 − 40）× 剩余 160 瓶<br>= 45 × 160 = ¥7,200</div>
+              </div>
+              <div class="lp-plan" data-tcycle="3" onclick="LP.selTcycle(this)">
+                <div class="yr">转为三年期</div>
+                <div class="big"><span class="cur">补差 ¥</span>14,400</div>
+                <div class="meta">单瓶差价 90 元（130 − 40）× 剩余 160 瓶<br>= 90 × 160 = ¥14,400</div>
+              </div>
+
+              <div id="transferTip" style="display:none;margin-top:12px;padding:10px 12px;border-radius:8px;background:#FDECEA;color:var(--lp-red);font-size:11.5px;line-height:1.7">
+                剩余瓶数不足 100 瓶，未达到转期门槛，无法提交转期订单。
+              </div>
+              <p style="font-size:11.5px;color:var(--lp-ink-3);margin-top:12px;line-height:1.7">补差公式：<b>需补差价 =（目标周期单瓶价 − 当前周期单瓶价）× 剩余瓶数</b>。仅一年期可升二年期或三年期，不可由二年转三年；转期后不可再次转期、不可回退、不可退差。系统自动校验，支付后即时生效。</p>
+            </div>
+            <div style="padding:12px 14px;background:#FFFDF7;border-top:1px solid var(--lp-line-soft)">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+                <span style="font-size:13px">需补差价</span>
+                <span class="lp-price" style="font-size:22px"><span class="cur">¥</span><span id="transferPrice">7,200</span></span>
+              </div>
+              <div id="transferDetail" style="text-align:right;font-size:11px;color:var(--lp-ink-3);margin-bottom:10px">(85 − 40) × 160 瓶 = ¥7,200</div>
+              <button id="transferSubmitBtn" class="lp-btn lp-btn-primary lp-btn-block" onclick="LP.transferSubmit(this)">确认补差并转期</button>
+            </div>
+          </section>
+
+          <!-- ========== 消息 ========== -->
+          <section class="lp-screen" id="pg_msg">
+            <div class="lp-navbar"><div class="nb-title">消息中心</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="lp-sec-title">全部消息</div>
+              <div class="lp-row" data-go="familyreg"><div class="av" style="background:var(--lp-red-wash);color:var(--lp-red)">活</div><div class="main"><div class="t">翻缸体验日 · 报名提醒</div><div class="s">您认领的酱缸将举办家庭日，点击报名 →</div></div><div class="rt" style="font-size:10px">刚刚</div></div>
+              <div class="lp-row" data-go="jardetail" data-month="6"><div class="av" style="background:var(--lp-gold);color:#3A2410">酿</div><div class="main"><div class="t">第 6 月酿造反馈已上传</div><div class="s">匠人上传了晒场视频与九宫格照片，点击看进度 →</div></div><div class="rt" style="font-size:10px">昨天</div></div>
+              <div class="lp-row"><div class="av" style="background:rgba(67,39,26,.1);color:var(--lp-brown-2)">提</div><div class="main"><div class="t">尝鲜装已寄出</div><div class="s">您的 10 瓶尝鲜装已发货，请注意查收</div></div><div class="rt" style="font-size:10px">3天前</div></div>
+            </div>
+          </section>
+
+          <!-- ========== 会员中心/权益 ========== -->
+          <section class="lp-screen" id="pg_vip">
+            <div class="lp-navbar dark"><button class="nb-btn" data-go="mine"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">会员中心</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="lp-vip">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+                  <div class="lp-seal"><span style="font-size:13px">酱友</span></div>
+                  <div><div class="lv">★ 酿香会员</div><div style="font-size:12px;opacity:.8;margin-top:5px">张酱友 · 认领 2 缸</div></div>
+                </div>
+                <div style="font-size:12px;opacity:.8">累计酿造 20 月 · 已提 100 瓶 · 家庭日 2 次</div>
+              </div>
+              <div class="lp-sec-title" style="margin-top:18px">我的权益</div>
+              <div class="lp-benefit"><div class="bi"><svg viewBox="0 0 24 24"><path d="M5 21V6l7-3 7 3v15M5 11h14"/></svg></div><div class="main"><div class="bt">专属酱缸</div><div class="bs">一缸一鉴，缸上木牌题字</div></div></div>
+              <div class="lp-benefit"><div class="bi"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5"/></svg></div><div class="main"><div class="bt">家庭日参观</div><div class="bs">一年3次 / 二年5次 / 三年7次</div></div></div>
+              <div class="lp-benefit"><div class="bi"><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h5l3 3v3h-8"/></svg></div><div class="main"><div class="bt">尝鲜装</div><div class="bs">二年10瓶 / 三年20瓶</div></div></div>
+              <div class="lp-benefit"><div class="bi"><svg viewBox="0 0 24 24"><path d="M4 12h14M12 6l6 6-6 6"/></svg></div><div class="main"><div class="bt">酱缸转期</div><div class="bs">满足门槛在线补差升级</div></div></div>
+              <div class="lp-benefit"><div class="bi"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.5 2 7-6.5-4-6.5 4 2-7L2 9.5 9 9z"/></svg></div><div class="main"><div class="bt">生日礼遇</div><div class="bs">生日当月赠定制小坛</div></div></div>
+            </div>
+          </section>
+
+          <!-- ========== 我的 ========== -->
+          <section class="lp-screen" id="pg_mine">
+            <div class="lp-navbar dark glass"><div class="nb-title">我的</div></div>
+            <div class="lp-body lp-scroll pad">
+              <!-- 游客态 -->
+              <div id="mineGuest">
+                <div class="mm-hero guest">
+                  <div class="mm-id">
+                    <div class="mm-av"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div>
+                    <div class="mm-tx">
+                      <div class="mm-name">未登录</div>
+                      <div class="mm-sub">微信授权后查看酱缸进度与提货记录</div>
+                    </div>
+                  </div>
+                  <button class="mm-login" onclick="LP.requireLogin(null)">微信登录</button>
+                </div>
+                <div class="mg-hint">不登录也能看：品牌故事、酿造工艺、套餐与客服咨询。</div>
+              </div>
+
+              <!-- 已登录 -->
+              <div id="mineUser" style="display:none">
+                <div class="mm-hero">
+                  <svg class="mm-mark" viewBox="0 0 64 64" aria-hidden="true">
+                    <path d="M23 8h18M25 8v5.6c0 2.2-.8 4.2-2.3 5.9l-2.9 3.3c-1.6 1.8-2.5 4.1-2.5 6.5V51c0 2.6 2.1 4.7 4.7 4.7h14c2.6 0 4.7-2.1 4.7-4.7V29.3c0-2.4-.9-4.7-2.5-6.5l-2.9-3.3c-1.5-1.7-2.3-3.7-2.3-5.9V8"/>
+                    <path d="M18.4 38h27.2"/><path d="M18.4 27.6h27.2"/>
+                  </svg>
+                  <div class="mm-id">
+                    <div class="mm-av"><span>酱</span></div>
+                    <div class="mm-tx">
+                      <div class="mm-name">张酱友</div>
+                      <div class="mm-sub"><span class="mm-vip">酿香会员</span><i>·</i>认领 2 缸</div>
+                    </div>
+                  </div>
+                  <div class="mm-stats">
+                    <div class="mm-st"><b>2</b><span>认领缸数</span></div>
+                    <div class="mm-st"><b>20</b><span>酿造月数</span></div>
+                    <div class="mm-st"><b>100</b><span>已提瓶数</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lp-row" data-go="myjars"><div class="av" style="background:var(--lp-red-wash);color:var(--lp-red)">缸</div><div class="main"><div class="t">我的酱缸</div></div><div class="rt"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+              <div class="lp-row" data-go="orders"><div class="av" style="background:var(--lp-gold);color:#3A2410">单</div><div class="main"><div class="t">我的订单</div></div><div class="rt"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+              <div class="lp-row" data-go="vip"><div class="av" style="background:rgba(67,39,26,.1);color:var(--lp-brown-2)">权</div><div class="main"><div class="t">会员权益</div></div><div class="rt"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+              <div class="lp-row" data-go="msg"><div class="av" style="background:var(--lp-red-wash);color:var(--lp-red)">消</div><div class="main"><div class="t">消息中心</div></div><div class="rt"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+              <div class="lp-row" data-go="service"><div class="av" style="background:rgba(67,39,26,.1);color:var(--lp-brown-2)">客</div><div class="main"><div class="t">联系客服</div><div class="s">电话 / 微信 / 在线咨询</div></div><div class="rt"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+              <div class="lp-row" id="logoutRow" style="display:none" onclick="LP.logout()"><div class="av" style="background:rgba(67,39,26,.06);color:var(--lp-ink-3)">退</div><div class="main"><div class="t" style="color:var(--lp-ink-3)">退出登录</div></div><div class="rt"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+            </div>
+          </section>
+
+          <!-- ========== 客服中心 ========== -->
+          <section class="lp-screen" id="pg_service">
+            <div class="lp-navbar"><div class="nb-title">客服中心</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="sv-hero">
+                <div class="row">
+                  <div class="sv-av">酱</div>
+                  <div style="flex:1;min-width:0">
+                    <div class="sv-name">客服小酱<small>专属顾问</small></div>
+                    <div class="sv-desc"><span class="sv-dot"></span>在线中 · 平均 1 分钟内回复</div>
+                  </div>
+                </div>
+                <div class="sv-soft">认领、提货、转期、家庭日，随时找我们。<br>服务时间 周一至周五 9:00-21:00</div>
+              </div>
+
+              <div class="lp-sec-title" style="margin-top:18px">联系我们</div>
+
+              <div class="sv-item" onclick="LP.callService()">
+                <div class="ic" style="background:var(--lp-red-wash)"><svg viewBox="0 0 24 24" stroke="var(--lp-red)"><path d="M5 3h4l2 5-2.5 1.5a12 12 0 006 6L16 13l5 2v4a2 2 0 01-2 2A17 17 0 013 5a2 2 0 012-2z"/></svg></div>
+                <div class="tx"><div class="tt">电话客服 400-888-1740</div><div class="ts">周一至周五 9:00-21:00</div></div>
+                <div class="sv-btn">一键拨打</div>
+              </div>
+
+              <div class="sv-item" onclick="LP.openQr()">
+                <div class="ic" style="background:rgba(94,140,80,.14)"><svg viewBox="0 0 24 24" stroke="#4F7A46"><circle cx="9" cy="9" r="3.2"/><path d="M3.5 19c0-3 2.6-5 5.5-5s5.5 2 5.5 5M16 8.5c1.4 0 2.5 1.1 2.5 2.5 0 1.2-.9 2.2-2 2.5M19 16.5c1 .8 1.5 1.9 1.5 3"/></svg></div>
+                <div class="tx"><div class="tt">微信客服</div><div class="ts">扫码添加顾问，发图沟通更省事</div></div>
+                <div class="sv-btn ghost">二维码</div>
+              </div>
+
+              <div class="sv-item" onclick="LP.show('chat')">
+                <div class="ic" style="background:rgba(201,162,75,.18)"><svg viewBox="0 0 24 24" stroke="#8E6A22"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9.5h8M8 12.5h5"/></svg></div>
+                <div class="tx"><div class="tt">在线客服</div><div class="ts">直接对接小程序客服会话</div></div>
+                <div class="sv-btn">立即咨询</div>
+              </div>
+
+              <div class="lp-sec-title" style="margin-top:18px">常见问题</div>
+              <div style="background:#FFFDF7;border:1px solid var(--lp-line-soft);border-radius:var(--lp-r-l);padding:2px 14px;box-shadow:var(--lp-sh-s)">
+                <div class="faq" onclick="LP.faq(this)"><div class="q">提货后多久能收到？<span class="i">＋</span></div><div class="a">提交提货申请后 48 小时内发出，顺丰冷链配送，可在「订单 → 提货记录」查看物流进度。</div></div>
+                <div class="faq" onclick="LP.faq(this)"><div class="q">酱缸还可以转期吗？<span class="i">＋</span></div><div class="a">剩余瓶数 ≥ 100 瓶且未转过期时可申请，一年期可转二年期或三年期，系统按「单瓶差价 × 剩余瓶数」自动计算，支付后即时生效。</div></div>
+                <div class="faq" onclick="LP.faq(this)"><div class="q">家庭日怎么报名？<span class="i">＋</span></div><div class="a">酿造节点前 7 天，我们会通过订阅消息和站内消息推送报名通知，点开消息即可选择场次报名，名额不限。</div></div>
+                <div class="faq" onclick="LP.faq(this)"><div class="q">付款后可以退款吗？<span class="i">＋</span></div><div class="a">酿造开始前可在小程序内申请退款，原路退回；酿造开始后不支持线上退款，请通过客服热线或微信客服与我们沟通。</div></div>
+              </div>
+
+              <div class="sv-foot">非服务时段留言也会收到，客服上线后第一时间回复您。</div>
+              <div style="height:16px"></div>
+            </div>
+          </section>
+
+          <!-- ========== 在线客服会话 ========== -->
+          <section class="lp-screen" id="pg_chat">
+            <div class="lp-navbar"><div class="nb-title">在线客服</div><div class="nb-right"><span class="sv-dot"></span>在线</div></div>
+            <div class="chat-wrap lp-scroll" id="chatScroll">
+              <div class="chat-day">今天 09:46</div>
+              <div class="chat-note">本次会话由微信小程序客服提供，可发送图片与订单号</div>
+              <div class="msg sv"><div class="av">酱</div><div class="bub">您好，我是客服小酱。认领、提货、转期、家庭日的问题都可以问我，也可以直接发订单号帮您查。</div></div>
+              <div id="chatList"></div>
+              <div class="chat-quick" id="chatQuick">
+                <span onclick="LP.chatQuick(this)">我的提货进度</span>
+                <span onclick="LP.chatQuick(this)">转期规则</span>
+                <span onclick="LP.chatQuick(this)">家庭日报名</span>
+                <span onclick="LP.chatQuick(this)">怎么开发票</span>
+              </div>
+            </div>
+            <div class="chat-bar">
+              <input id="chatInput" placeholder="请输入问题，客服马上回复" onkeydown="if(event.key==='Enter')LP.chatSend()">
+              <button onclick="LP.chatSend()">发送</button>
+            </div>
+          </section>
+
+        </div><!-- /screens -->
+
+        <!-- 登录引导弹层：微信授权 → 绑定手机号 -->
+        <div class="lp-mask" id="loginMask" onclick="if(event.target===this)LP.closeLogin()">
+          <div class="lg-sheet">
+            <div class="lg-bar"></div>
+            <div class="lg-x" onclick="LP.closeLogin()">×</div>
+
+            <div class="lg-step on" id="lgStep1">
+              <div class="lg-seal"><div class="lp-seal lp-seal-lg"><span>龍牌<br>湘味</span></div></div>
+              <div class="lg-t">登录后即可认领酱缸</div>
+              <div class="lg-s">微信授权一键登录，无需注册、不用验证码</div>
+              <button class="lg-wx" onclick="LP.wxLogin(this)">
+                <svg viewBox="0 0 24 24"><path d="M9.2 3.6C5.3 3.6 2 6.2 2 9.4c0 1.8 1 3.4 2.7 4.4l-.7 2.1 2.4-1.2c.8.2 1.6.3 2.4.3h.4"/><path d="M22 15.2c0-2.6-2.5-4.7-5.6-4.7s-5.6 2.1-5.6 4.7 2.5 4.7 5.6 4.7c.7 0 1.5-.1 2.1-.3l2 1-.6-1.7c1.3-.9 2.1-2.2 2.1-3.7z"/></svg>
+                微信一键登录
+              </button>
+              <label class="lg-agree" onclick="event.stopPropagation()">
+                <input type="checkbox" id="lgAgree" checked>
+                <span>已阅读并同意 <a href="javascript:void(0)" onclick="LP.doc('用户协议')">《用户协议》</a> 与 <a href="javascript:void(0)" onclick="LP.doc('隐私政策')">《隐私政策》</a>，授权获取微信昵称与头像</span>
+              </label>
+              <button class="lg-skip" onclick="LP.closeLogin()">先逛逛，稍后再说</button>
+            </div>
+
+            <div class="lg-step" id="lgStep2">
+              <div class="lg-wxok"><span>✓</span>微信授权成功 · 张酱友</div>
+              <div class="lg-t" style="margin-top:14px">绑定手机号</div>
+              <div class="lg-s">读取微信号绑定的手机号，用于接收酿造进度、<br>家庭日报名与提货物流通知</div>
+              <button class="lg-wx" onclick="LP.bindPhone(this)">
+                <svg viewBox="0 0 24 24"><path d="M9.2 3.6C5.3 3.6 2 6.2 2 9.4c0 1.8 1 3.4 2.7 4.4l-.7 2.1 2.4-1.2c.8.2 1.6.3 2.4.3h.4"/><path d="M22 15.2c0-2.6-2.5-4.7-5.6-4.7s-5.6 2.1-5.6 4.7 2.5 4.7 5.6 4.7c.7 0 1.5-.1 2.1-.3l2 1-.6-1.7c1.3-.9 2.1-2.2 2.1-3.7z"/></svg>
+                一键绑定手机号
+              </button>
+              <div class="lg-tip">手机号仅用于本小程序服务通知，不对外展示</div>
+              <button class="lg-skip" onclick="LP.skipPhone()">暂不绑定，先去逛逛</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 选择收货地址 -->
+        <div class="lp-mask" id="addrMask" onclick="if(event.target===this)LP.closeAddr()">
+          <div class="lp-sheet">
+            <div class="hd"><div class="t">选择收货地址</div><div class="x" onclick="LP.closeAddr()">✕</div></div>
+            <div id="addrList"></div>
+            <button class="addr-add" style="margin-top:6px" onclick="LP.closeAddr();LP.show('addaddr')">
+              <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增收货地址
+            </button>
+          </div>
+        </div>
+
+        <!-- 省市区选择 -->
+        <div class="lp-mask" id="regionMask" onclick="if(event.target===this)LP.closeRegion()">
+          <div class="lp-sheet">
+            <div class="hd"><div class="t">选择所在地区</div><div class="x" onclick="LP.closeRegion()">✕</div></div>
+            <div class="rg-crumb" id="rgCrumb"></div>
+            <div class="rg-list" id="rgList"></div>
+          </div>
+        </div>
+
+        <!-- 图片大图 -->
+        <div class="lp-mask img-mask" id="imgMask" onclick="LP.closeImg()">
+          <img id="imgBig" src="" alt="">
+        </div>
+
+        <!-- 拨号确认弹层 -->
+        <div class="lp-mask center" id="telMask" onclick="if(event.target===this)LP.closeTel()">
+          <div class="tel-sheet">
+            <div class="tel-ic"><svg viewBox="0 0 24 24"><path d="M5 3h4l2 5-2.5 1.5a12 12 0 006 6L16 13l5 2v4a2 2 0 01-2 2A17 17 0 013 5a2 2 0 012-2z"/></svg></div>
+            <div class="tel-t">拨打客服热线</div>
+            <div class="tel-num">400-888-1740</div>
+            <div class="tel-s">服务时间 周一至周五 9:00-21:00</div>
+            <div class="qr-btns" style="margin-top:18px">
+              <button class="lp-btn lp-btn-ghost" onclick="LP.closeTel()">取消</button>
+              <button class="lp-btn lp-btn-primary" onclick="LP.doCall()">立即拨打</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 客服微信二维码弹层 -->
+        <div class="lp-mask center" id="qrMask" onclick="if(event.target===this)LP.closeQr()">
+          <div class="qr-sheet">
+            <div class="qr-x" onclick="LP.closeQr()">×</div>
+            <div class="qr-t">添加客服微信</div>
+            <div class="qr-s">扫码添加「龙牌湘味 · 小酱」<br>备注「认领酱缸」，通过更快</div>
+            <div class="qr-box">
+              <img src="assets/img/qr-service.png" alt="客服微信二维码">
+              <div class="qr-logo">龍</div>
+            </div>
+            <div class="qr-note">长按识别 · 或保存到相册后用微信扫一扫</div>
+            <div class="qr-btns">
+              <button class="lp-btn lp-btn-ghost" onclick="LP.saveQr()">保存到相册</button>
+              <button class="lp-btn lp-btn-primary" onclick="LP.closeQr();LP.show('chat')">去在线咨询</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 底部 Tab -->
+        <div class="lp-tabbar" id="tabbar">
+          <div class="lp-tab on" data-tab="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>首页</div>
+          <div class="lp-tab" data-tab="orders"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6zM15 2v5h5M9 13h6M9 17h6"/></svg>订单</div>
+          <div class="lp-tab" data-tab="msg"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H7l-3 3z"/><span class="dot">3</span></svg>消息</div>
+          <div class="lp-tab" data-tab="mine"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>我的</div>
+        </div>
+
+      </div><!-- /app -->
+    </div><!-- /screen-wrap -->
+  </div><!-- /device -->
+  </div><!-- /lp-fit -->
+
+  <!-- 演示导航抽屉 -->
+  <button id="navToggle">≡</button>
+  <div id="navDrawer" style="position:fixed;left:0;top:0;bottom:0;width:240px;background:#241509;color:#E9D9B8;z-index:1000;transform:translateX(-100%);transition:transform .25s;overflow-y:auto;padding:18px 14px">
+    <div style="font-family:var(--lp-kai);font-size:17px;font-weight:800;margin-bottom:4px">演示导航</div>
+    <div style="font-size:11px;opacity:.6;margin-bottom:14px">用户端 · 全部页面</div>
+    <div id="navList"></div>
+  </div>
+  <div id="navMask" style="position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:999;display:none" onclick="LP.toggleNav()"></div>
+</div><!-- /stage -->
+
+<script src="assets/js/user.js"></script>
+</body>
+</html>

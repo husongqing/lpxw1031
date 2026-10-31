@@ -1,0 +1,162 @@
+/* ============================================================
+   龙牌湘味 · 认领酱缸 — 设计系统 (VI)
+   古典匠心 · 传统酿造 · 朱砂印 + 酱褐 + 鎏金 + 宣纸米白
+   ============================================================ */
+
+:root{
+  /* —— 主色：龙牌朱砂红（印章、主按钮、强调） —— */
+  --lp-red:        #9E2A1E;
+  --lp-red-deep:   #7A1E14;
+  --lp-red-soft:   #C24A3A;
+  --lp-red-wash:   #F4E4DF;   /* 浅红底（选中/标签） */
+
+  /* —— 酱褐：传统酿造、深色块、页头底 —— */
+  --lp-brown:      #43271A;
+  --lp-brown-2:    #5A3A26;
+  --lp-brown-soft: #6B4329;
+
+  /* —— 鎏金：点缀、分割线、价格、徽标 —— */
+  --lp-gold:       #C2A05A;
+  --lp-gold-deep:  #A8843A;
+  --lp-gold-line:  #D8C28A;
+
+  /* —— 宣纸米白：背景 —— */
+  --lp-paper:      #F6EFE0;
+  --lp-paper-2:    #EFE4CE;
+  --lp-paper-3:    #E7D9BD;
+
+  /* —— 墨色：正文 —— */
+  --lp-ink:        #2A1E16;
+  --lp-ink-2:      #5B4A3A;
+  --lp-ink-3:      #8A7860;
+
+  /* —— 线/描边 —— */
+  --lp-line:       #D8C9A8;
+  --lp-line-soft:  #E9DEc6;
+
+  /* —— 功能色 —— */
+  --lp-ok:         #3F7A4B;
+  --lp-warn:       #C8862A;
+  --lp-danger:     #B23A2E;
+
+  /* —— 字体 —— */
+  --lp-serif: "Songti SC","STSong","SimSun","Noto Serif SC",serif;
+  --lp-kai:   "Kaiti SC","STKaiti","KaiTi","Noto Serif SC",serif;
+  --lp-sans:  "PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,"Helvetica Neue",sans-serif;
+
+  /* —— 圆角 / 阴影 —— */
+  --lp-r:   12px;
+  --lp-r-s: 8px;
+  --lp-r-l: 18px;
+  --lp-sh:  0 6px 22px rgba(67,39,26,.12);
+  --lp-sh-s:0 2px 8px rgba(67,39,26,.10);
+}
+
+/* ---------- 通用：宣纸纹理 + 回纹边 ---------- */
+.lp-paper-bg{
+  background-color:var(--lp-paper);
+  background-image:
+    radial-gradient(circle at 20% 12%, rgba(194,160,90,.06), transparent 42%),
+    radial-gradient(circle at 85% 80%, rgba(158,42,30,.05), transparent 40%),
+    repeating-linear-gradient(0deg, rgba(120,90,50,.018) 0 2px, transparent 2px 5px);
+}
+
+/* 回纹（雷纹）边框装饰：用两层渐变伪造连续回字纹 */
+.lp-fret{
+  position:relative;
+}
+.lp-fret::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  padding:6px;
+  background:
+    repeating-linear-gradient(90deg, var(--lp-gold) 0 8px, transparent 8px 14px) top/100% 2px no-repeat,
+    repeating-linear-gradient(90deg, var(--lp-gold) 0 8px, transparent 8px 14px) bottom/100% 2px no-repeat,
+    repeating-linear-gradient(0deg, var(--lp-gold) 0 8px, transparent 8px 14px) left/2px 100% no-repeat,
+    repeating-linear-gradient(0deg, var(--lp-gold) 0 8px, transparent 8px 14px) right/2px 100% no-repeat;
+  opacity:.55;
+}
+
+/* ---------- 印章 logo（龙牌湘味） ---------- */
+.lp-seal{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:46px;height:46px;border-radius:9px;
+  background:linear-gradient(145deg,var(--lp-red),var(--lp-red-deep));
+  color:#F6E9C8;font-family:var(--lp-kai);font-weight:800;
+  box-shadow:inset 0 0 0 2px rgba(246,233,200,.55), 0 3px 8px rgba(122,30,20,.4);
+  position:relative;line-height:1;letter-spacing:-1px;
+}
+.lp-seal span{display:flex;flex-direction:column;font-size:15px;line-height:.95;text-align:center}
+.lp-seal::after{content:"";position:absolute;inset:3px;border:1px solid rgba(246,233,200,.45);border-radius:6px}
+
+.lp-seal-lg{width:64px;height:64px;border-radius:12px}
+.lp-seal-lg span{font-size:21px}
+
+/* ---------- 按钮 ---------- */
+.lp-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  border:none;cursor:pointer;font-family:var(--lp-sans);font-weight:700;
+  border-radius:999px;padding:11px 22px;font-size:15px;
+  transition:transform .08s ease, box-shadow .2s ease, opacity .2s;
+}
+.lp-btn:active{transform:scale(.97)}
+.lp-btn-primary{background:linear-gradient(135deg,var(--lp-red-soft),var(--lp-red));color:#FBEFD8;box-shadow:0 4px 12px rgba(158,42,30,.32)}
+.lp-btn-gold{background:linear-gradient(135deg,var(--lp-gold),var(--lp-gold-deep));color:#3A2410;box-shadow:0 4px 12px rgba(168,132,58,.3)}
+.lp-btn-ghost{background:transparent;color:var(--lp-red);box-shadow:inset 0 0 0 1.5px var(--lp-red)}
+.lp-btn-block{display:flex;width:100%}
+.lp-btn[disabled]{opacity:.5;cursor:not-allowed}
+
+/* ---------- 标签 / 徽标 ---------- */
+.lp-tag{
+  display:inline-flex;align-items:center;font-size:11px;font-weight:700;
+  padding:2px 9px;border-radius:999px;line-height:1.6;
+  background:var(--lp-red-wash);color:var(--lp-red);
+}
+.lp-tag.gold{background:rgba(194,160,90,.18);color:var(--lp-gold-deep)}
+.lp-tag.brown{background:rgba(67,39,26,.1);color:var(--lp-brown)}
+.lp-tag.ok{background:rgba(63,122,75,.14);color:var(--lp-ok)}
+.lp-tag.gray{background:rgba(90,74,58,.1);color:var(--lp-ink-3)}
+
+/* ---------- 卡片 ---------- */
+.lp-card{
+  background:#FFFDF7;border:1px solid var(--lp-line-soft);border-radius:var(--lp-r);
+  box-shadow:var(--lp-sh-s);
+}
+.lp-card-pad{padding:16px}
+
+/* ---------- 价格字 ---------- */
+.lp-price{font-family:var(--lp-serif);color:var(--lp-red);font-weight:800}
+.lp-price .cur{font-size:.62em;margin-right:1px}
+.lp-price .u{font-size:.5em;color:var(--lp-ink-3);font-family:var(--lp-sans);font-weight:600;margin-left:2px}
+
+/* ---------- 分隔标题（古典） ---------- */
+.lp-sec-title{
+  display:flex;align-items:center;gap:10px;margin:4px 0 12px;
+  font-family:var(--lp-kai);font-size:17px;font-weight:800;color:var(--lp-brown);
+}
+.lp-sec-title::before{content:"";width:5px;height:18px;border-radius:3px;background:linear-gradient(var(--lp-red),var(--lp-red-deep))}
+.lp-sec-title .en{font-family:var(--lp-sans);font-size:11px;color:var(--lp-ink-3);font-weight:600;margin-left:auto}
+
+/* ---------- 印章落款小字 ---------- */
+.lp-seal-mark{font-family:var(--lp-kai);color:var(--lp-red);font-size:12px;opacity:.85}
+
+/* ---------- 进度/步骤通用 ---------- */
+.lp-step-dot{width:10px;height:10px;border-radius:50%;background:var(--lp-line);flex:none}
+.lp-step-dot.on{background:var(--lp-red)}
+
+/* ---------- 滚动条（细） ---------- */
+.lp-scroll::-webkit-scrollbar{width:5px;height:5px}
+.lp-scroll::-webkit-scrollbar-thumb{background:var(--lp-line);border-radius:3px}
+.lp-scroll::-webkit-scrollbar-track{background:transparent}
+
+/* ---------- 通用动画 ---------- */
+@keyframes lp-fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes lp-pop{0%{opacity:0;transform:scale(.9)}100%{opacity:1;transform:scale(1)}}
+@keyframes lp-shimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}
+
+/* ---------- Toast ---------- */
+.lp-toast{
+  position:fixed;left:50%;top:42%;transform:translate(-50%,-50%);
+  background:rgba(42,30,22,.92);color:#F6EFE0;padding:11px 18px;border-radius:10px;
+  font-size:13.5px;z-index:9999;pointer-events:none;animation:lp-pop .18s ease;
+  font-family:var(--lp-sans);max-width:78%;text-align:center;
+}
