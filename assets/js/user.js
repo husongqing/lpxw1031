@@ -2,9 +2,9 @@
 (function(){
   const TABS = ['home','orders','msg','mine'];
   const cycleData = {
-    1:{price:8000,  name:'一年期', title:'一年期酱缸认领', finish:'2027-10', bottles:200, per:40},
-    2:{price:17000, name:'二年期', title:'二年期酱缸认领', finish:'2028-10', bottles:200, per:85},
-    3:{price:26000, name:'三年期', title:'三年期酱缸认领', finish:'2029-10', bottles:200, per:130}
+    1:{price:8000,  name:'一年期', title:'一年期酱缸认酿', finish:'2027-10', bottles:200, per:40},
+    2:{price:17000, name:'二年期', title:'二年期酱缸认酿', finish:'2028-10', bottles:200, per:85},
+    3:{price:26000, name:'三年期', title:'三年期酱缸认酿', finish:'2029-10', bottles:200, per:130}
   };
   const MIN_TRANSFER_BOTTLE = 100;   // 转期门槛：剩余瓶数 ≥ 100
 
@@ -26,7 +26,7 @@
   /* ---------- 登录态（游客可先浏览，需要身份时再引导登录） ---------- */
   let isLogged = false;
   let pendingTarget = null;     // 登录成功后要去的页面
-  // 需要登录才能访问的页面：认领购买、个人数据
+  // 需要登录才能访问的页面：认酿购买、个人数据
   const NEED_AUTH = ['pay','myjars','jardetail','family','familyreg',
                      'orders','orderdetail','refund','pickup','pickuplog','shipdetail','addaddr','addrlist','transfer','msg','vip','myreg'];
 
@@ -59,7 +59,7 @@
     }
     ensureBack(pid);
     if(pid === 'transfer') renderTransfer();
-    if(pid === 'pay') syncWay();   // 回到认领页时恢复上一次的认领方式
+    if(pid === 'pay') syncWay();   // 回到认酿页时恢复上一次的认酿方式
     if(pid === 'mine') renderMine();
     if(pid === 'pickup') renderPickAddr();
     if(pid === 'myreg') renderMyReg();
@@ -98,8 +98,8 @@
   function buildNav(){
     const list = document.getElementById('navList');
     const pages = [
-      ['splash','加载页'],['home','首页'],['cycle','认领选周期'],
-      ['pay','确认认领/支付'],['myjars','我的酱缸'],['jardetail','酿造进度'],
+      ['splash','加载页'],['home','首页'],['cycle','认酿选周期'],
+      ['pay','确认认酿/支付'],['myjars','我的酱缸'],['jardetail','酿造进度'],
       ['family','家庭日列表'],['familyreg','家庭日报名'],
       ['orders','订单列表'],['orderdetail','订单详情'],['refund','退款申请'],
       ['pickup','提货申请'],['pickuplog','提货记录'],['shipdetail','发货详情'],
@@ -273,7 +273,7 @@
   const ORDERS = {
     unpaid: {
       state:'unpaid', stateText:'待支付', tag:'',
-      title:'二年期酱缸认领', price:17000, priceText:'17,000', bottles:200,
+      title:'二年期酱缸认酿', price:17000, priceText:'17,000', bottles:200,
       no:'LP20261031001', man:'张酱友', timer:'张府家酿 · 丙午年',
       payLabel:'下单时间', payTime:'2026-10-31 11:40', startTime:'支付后 7 日内排缸',
       keepTime:'2026-10-31 23:40',
@@ -282,7 +282,7 @@
     },
     pending: {
       state:'pending', stateText:'待酿造', tag:'warn',
-      title:'一年期酱缸认领', price:8000, priceText:'8,000', bottles:200,
+      title:'一年期酱缸认酿', price:8000, priceText:'8,000', bottles:200,
       no:'LP20261028003', man:'张酱友', timer:'张府家酿 · 丙午年',
       payTime:'2026-10-28 16:05', startTime:'预计 2026-11-05 排缸',
       note:'已支付成功，酱园尚未排缸开工。开工后匠人开始上传酿造记录，届时可在「我的酱缸 - 酿造进度」中查看。',
@@ -290,7 +290,7 @@
     },
     brewing: {
       state:'brewing', stateText:'酿造中', tag:'ok',
-      title:'三年期酱缸认领', price:26000, priceText:'26,000', bottles:200,
+      title:'三年期酱缸认酿', price:26000, priceText:'26,000', bottles:200,
       no:'LP20250810007', man:'张酱友', timer:'张府家酿 · 乙巳年',
       payTime:'2025-08-10 09:15', startTime:'2025-09-02 已开工',
       note:'匠人正在按节点上传酿造记录，可随时查看酿造历程与月度反馈。',
@@ -298,20 +298,20 @@
     },
     done: {
       state:'done', stateText:'已完成', tag:'',
-      title:'一年期酱缸认领', price:8000, priceText:'8,000', bottles:200,
+      title:'一年期酱缸认酿', price:8000, priceText:'8,000', bottles:200,
       no:'LP20260420001', man:'张酱友', timer:'张府家酿 · 甲辰年',
       payTime:'2026-04-20 10:32', startTime:'2026-04-20 已完成制醅',
       certNo:'LP-CERT-2026-0401', certDate:'2026-04-20',
-      note:'本订单已完成提货，感谢您的认领。可继续查看酿造记录与提货历史。',
+      note:'本订单已完成提货，感谢您的认酿。可继续查看酿造记录与提货历史。',
       jarSub:'12 月色满缸，记录已归档'
     },
     canceled: {
       state:'canceled', stateText:'已取消', tag:'gray',
-      title:'一年期酱缸认领', price:8000, priceText:'8,000', bottles:200,
+      title:'一年期酱缸认酿', price:8000, priceText:'8,000', bottles:200,
       no:'LP20260915002', man:'张酱友', timer:'张府家酿 · 乙巳年',
       payLabel:'下单时间', payTime:'2026-09-15 14:20', startTime:'未开工',
       cancelTime:'2026-09-16 10:05',
-      note:'订单已取消，缸位与缸上题字已释放。如需认领，可重新下单。'
+      note:'订单已取消，缸位与缸上题字已释放。如需认酿，可重新下单。'
     }
   };
   let curOrder = 'pending';
@@ -327,7 +327,7 @@
     const foot = document.getElementById('odFoot');
     if(!body || !foot) return;
 
-    const tagHtml = '<span class="lp-tag ' + o.tag + '">认领订单 · ' + o.stateText + '</span>';
+    const tagHtml = '<span class="lp-tag ' + o.tag + '">认酿订单 · ' + o.stateText + '</span>';
     const NOTE_TITLE = {
       unpaid:'待支付 · 酱园尚未排缸',
       pending:'等待酱园排缸开工',
@@ -357,16 +357,16 @@
         + '<div class="ic"><svg viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 0114.6-5.9M20.5 12a8.5 8.5 0 01-14.6 5.9"/>'
         + '<path d="M18 2.5v4h-4M6 21.5v-4h4"/></svg></div>'
         + '<div class="main"><div class="t">酱缸转期</div>'
-        + '<div class="s">' + (o.state==='pending' ? '开工前可延长认领周期，按单瓶差价补差' : '可升级更长周期，按单瓶差价补差') + '</div></div>'
+        + '<div class="s">' + (o.state==='pending' ? '开工前可延长认酿周期，按单瓶差价补差' : '可升级更长周期，按单瓶差价补差') + '</div></div>'
         + '<div class="arr">去转期<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>'
         + '</div>'
       : '';
 
-    // 认领证书：仅已完成订单可见，支持长按/按钮保存
+    // 认酿证书：仅已完成订单可见，支持长按/按钮保存
     const certBlock = o.state!=='done' ? '' :
         '<div class="od-cert" onclick="LP.openCert()">'
-        + '<div class="ct"><img src="assets/img/cert.jpg" alt="认领证书"></div>'
-        + '<div class="main"><div class="t">酱缸认领证书</div>'
+        + '<div class="ct"><img src="assets/img/cert.jpg" alt="认酿证书"></div>'
+        + '<div class="main"><div class="t">酱缸认酿证书</div>'
         + '<div class="s">编号 ' + (o.certNo || 'LP-CERT-2026-0401') + ' · 颁发于 ' + (o.certDate || '2026-04-20') + '</div></div>'
         + '<div class="arr">查看<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>'
         + '</div>';
@@ -386,7 +386,7 @@
       + certBlock
       + '<div class="lp-card lp-card-pad" style="font-size:12.5px;line-height:2;color:var(--lp-ink-2)">'
       +   '<div style="display:flex;justify-content:space-between"><span>订单编号</span><span>' + o.no + '</span></div>'
-      +   '<div style="display:flex;justify-content:space-between"><span>认领人</span><span>' + o.man + '</span></div>'
+      +   '<div style="display:flex;justify-content:space-between"><span>认酿人</span><span>' + o.man + '</span></div>'
       +   '<div style="display:flex;justify-content:space-between"><span>缸上题字</span><span>' + o.timer + '</span></div>'
       +   '<div style="display:flex;justify-content:space-between"><span>' + (o.payLabel || '支付时间') + '</span><span>' + o.payTime + '</span></div>'
       +   (o.keepTime ? '<div style="display:flex;justify-content:space-between"><span>支付截止</span><span style="color:var(--lp-red);font-weight:700">' + o.keepTime + '</span></div>' : '')
@@ -404,7 +404,7 @@
       pending: '<button class="lp-btn lp-btn-ghost lp-btn-block" data-go="service">联系客服</button>'
         + '<button class="lp-btn lp-btn-primary lp-btn-block" onclick="LP.openRefund()">申请退款</button>',
       canceled: '<button class="lp-btn lp-btn-ghost lp-btn-block" data-go="service">联系客服</button>'
-        + '<button class="lp-btn lp-btn-primary lp-btn-block" data-go="cycle">再次认领</button>',
+        + '<button class="lp-btn lp-btn-primary lp-btn-block" data-go="cycle">再次认酿</button>',
       // 酿造中：底部不放按钮，转期与提货入口以卡片形式放在正文
       brewing: ''
     };
@@ -560,7 +560,7 @@
     try{ window.open('https://www.sf-express.com/chn/sc', '_blank'); }catch(e){}
   }
 
-  /* ---------- 认领方式：本人认领 / 转赠他人 ---------- */
+  /* ---------- 认酿方式：本人认酿 / 转赠他人 ---------- */
   let claimWay = 'self';        // self | gift
   let giftInfo = null;          // {tel, name, word}
 
@@ -596,7 +596,7 @@
   }
   function closeGift(){
     document.getElementById('giftMask').classList.remove('on');
-    if(!giftInfo) setWay('self');     // 未提交过转赠信息 → 回退到本人认领
+    if(!giftInfo) setWay('self');     // 未提交过转赠信息 → 回退到本人认酿
   }
 
   function giftSubmit(){
@@ -631,7 +631,7 @@
       setTimeout(()=>{ giftInfo = null; setWay('self'); show('myjars'); }, 1000);
       return;
     }
-    toast('支付成功，认领生效 🎉');
+    toast('支付成功，认酿生效 🎉');
     setTimeout(()=>show('myjars'), 900);
   }
   function playVideo(){ toast('正在播放《晒场实录》第 6 月（演示）'); }
@@ -652,7 +652,7 @@
   }
   function closeImg(){ document.getElementById('imgMask').classList.remove('on'); }
 
-  /* ---------- 认领证书：查看 / 保存 ---------- */
+  /* ---------- 认酿证书：查看 / 保存 ---------- */
   function openCert(){
     const m = document.getElementById('certMask');
     if(m) m.classList.add('on');
@@ -670,7 +670,7 @@
       try{
         const a = document.createElement('a');
         a.href = 'assets/img/cert.jpg';
-        a.download = '龙牌湘味-酱缸认领证书.jpg';
+        a.download = '龙牌湘味-酱缸认酿证书.jpg';
         document.body.appendChild(a);
         a.click();
         a.remove();

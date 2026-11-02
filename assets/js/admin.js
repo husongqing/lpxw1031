@@ -33,9 +33,9 @@
       ['赵小满','137****6655','4','赵父、赵母、赵女','2026-10-20','已确认']
     ],
     orders:[
-      ['LP20261028003','认领订单','张酱友','¥8,000','200','—','待酿造','2026-10-28','refund'],
-      ['LP20250810002','认领订单','王一品','¥26,000','200','—','酿造中','2025-08-10','detail'],
-      ['LP20260420001','认领订单','张酱友','¥8,000','200','—','已完成','2026-04-20','detail'],
+      ['LP20261028003','认酿订单','张酱友','¥8,000','200','—','待酿造','2026-10-28','refund'],
+      ['LP20250810002','认酿订单','王一品','¥26,000','200','—','酿造中','2025-08-10','detail'],
+      ['LP20260420001','认酿订单','张酱友','¥8,000','200','—','已完成','2026-04-20','detail'],
       ['TH20261012001','提货单','张酱友','—','60','顺丰 SF1234 5678 9012','已发货','2026-10-12','detail'],
       ['TH20261020002','提货单','张酱友','—','40','—','待发货','2026-10-20','ship'],
       ['TR20260901001','转期订单','赵小满','¥7,200','—','—','已生效','2026-09-01','detail']
@@ -208,7 +208,7 @@
     document.querySelectorAll('.ad-mi').forEach(m=>m.classList.toggle('on',m.dataset.mod===mod));
     document.querySelectorAll('.ad-mod').forEach(s=>s.classList.remove('on'));
     const el=document.getElementById('m_'+mod);if(el)el.classList.add('on');
-    const names={dashboard:'工作台',users:'用户管理',jars:'酱缸/认领订单',packages:'套餐配置',brews:'酿造记录',family:'家庭日活动',orders:'订单与提货',transfer:'转期管理',tasting:'尝鲜装管理',messages:'消息管理',content:'内容管理',settings:'系统设置'};
+    const names={dashboard:'工作台',users:'用户管理',jars:'酱缸/认酿订单',packages:'套餐配置',brews:'酿造记录',family:'家庭日活动',orders:'订单与提货',transfer:'转期管理',tasting:'尝鲜装管理',messages:'消息管理',content:'内容管理',settings:'系统设置'};
     document.getElementById('crumb').textContent=names[mod]||'';
     if(mod==='dashboard'){drawTrend();drawCycle();}
   }
