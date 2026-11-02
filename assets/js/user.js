@@ -28,7 +28,7 @@
   let pendingTarget = null;     // 登录成功后要去的页面
   // 需要登录才能访问的页面：认领购买、个人数据
   const NEED_AUTH = ['pay','myjars','jardetail','family','familyreg',
-                     'orders','orderdetail','refund','pickup','pickuplog','shipdetail','addaddr','transfer','msg','vip'];
+                     'orders','orderdetail','refund','pickup','pickuplog','shipdetail','addaddr','addrlist','transfer','msg','vip','myreg'];
 
   function show(pid, fromBack){
     const el = document.getElementById('pg_'+pid);
@@ -59,9 +59,11 @@
     }
     ensureBack(pid);
     if(pid === 'transfer') renderTransfer();
+    if(pid === 'pay') syncWay();   // 回到认领页时恢复上一次的认领方式
     if(pid === 'mine') renderMine();
     if(pid === 'pickup') renderPickAddr();
-    if(pid === 'addaddr') resetAddrForm();
+    if(pid === 'myreg') renderMyReg();
+    if(pid === 'addrlist') renderAddrManage();
     if(pid === 'orderdetail') renderOrder();
     if(pid === 'chat') setTimeout(chatScrollBottom, 80);
     closeNav();
@@ -101,8 +103,8 @@
       ['family','家庭日列表'],['familyreg','家庭日报名'],
       ['orders','订单列表'],['orderdetail','订单详情'],['refund','退款申请'],
       ['pickup','提货申请'],['pickuplog','提货记录'],['shipdetail','发货详情'],
-      ['addaddr','新增收货地址'],['transfer','转期申请'],['msg','消息中心'],
-      ['vip','会员中心'],['service','客服中心'],['chat','在线客服会话'],['mine','我的']
+      ['addaddr','新增/编辑收货地址'],['addrlist','收货地址管理'],['transfer','转期申请'],['msg','消息中心'],
+      ['vip','会员中心'],['myreg','我的报名'],['service','客服中心'],['chat','在线客服会话'],['mine','我的']
     ];
     list.innerHTML = pages.map(([id,n])=>`<div onclick="LP.show('${id}')" style="padding:9px 10px;border-radius:8px;cursor:pointer;font-size:13px;margin-bottom:4px;background:rgba(255,255,255,.04)">${n}</div>`).join('');
   }
@@ -349,6 +351,17 @@
         + '<div class="arr">进入<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>'
         + '</div>');
 
+    // 转期入口：待酿造（开工前可延长期）与酿造中（可升级更长周期）均提供
+    const transferBlock = (o.state==='pending' || o.state==='brewing')
+      ? '<div class="od-jar tr" onclick="LP.show(\'transfer\')">'
+        + '<div class="ic"><svg viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 0114.6-5.9M20.5 12a8.5 8.5 0 01-14.6 5.9"/>'
+        + '<path d="M18 2.5v4h-4M6 21.5v-4h4"/></svg></div>'
+        + '<div class="main"><div class="t">酱缸转期</div>'
+        + '<div class="s">' + (o.state==='pending' ? '开工前可延长认领周期，按单瓶差价补差' : '可升级更长周期，按单瓶差价补差') + '</div></div>'
+        + '<div class="arr">去转期<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>'
+        + '</div>'
+      : '';
+
     // 认领证书：仅已完成订单可见，支持长按/按钮保存
     const certBlock = o.state!=='done' ? '' :
         '<div class="od-cert" onclick="LP.openCert()">'
@@ -369,6 +382,7 @@
       +   '<div class="s">' + o.note + '</div>'
       + '</div>'
       + jarBlock
+      + transferBlock
       + certBlock
       + '<div class="lp-card lp-card-pad" style="font-size:12.5px;line-height:2;color:var(--lp-ink-2)">'
       +   '<div style="display:flex;justify-content:space-between"><span>订单编号</span><span>' + o.no + '</span></div>'
@@ -391,7 +405,7 @@
         + '<button class="lp-btn lp-btn-primary lp-btn-block" onclick="LP.openRefund()">申请退款</button>',
       canceled: '<button class="lp-btn lp-btn-ghost lp-btn-block" data-go="service">联系客服</button>'
         + '<button class="lp-btn lp-btn-primary lp-btn-block" data-go="cycle">再次认领</button>',
-      // 酿造中：不提供转期 / 提货入口，底部操作条整体隐藏
+      // 酿造中：底部不放按钮，转期与提货入口以卡片形式放在正文
       brewing: ''
     };
     const footHtml = FOOT.hasOwnProperty(o.state)
@@ -469,6 +483,69 @@
     }, 1100);
   }
 
+  /* ---------- 我的报名（家庭日） ----------
+     规则：每个周期含固定次数家庭日（1 年 3 次 / 2 年 5 次 / 3 年 7 次），
+     同一自然年内每口酱缸仅参加 1 次；该年度存在「已确认参加」或「待跟进」记录时，
+     系统不再推送该年度的报名消息与表单。 */
+  const REGS = [
+    { jar:'二号酱缸', cycle:'三年期', timer:'张府家酿 · 乙巳年', year:'2026',
+      act:'翻缸体验日', date:'2026-11-08（周日）09:30', place:'湘潭 · 龙牌晒场',
+      num:3, members:'李梅（妻）、张小满（子）', submit:'2026-10-25',
+      status:'confirmed', note:'酱园已确认名额，届时凭报名短信入场。' },
+    { jar:'二号酱缸', cycle:'三年期', timer:'张府家酿 · 乙巳年', year:'2025',
+      act:'制醅开缸日', date:'2025-09-20（周六）09:30', place:'湘潭 · 龙牌晒场',
+      num:2, members:'李梅（妻）', submit:'2025-09-02',
+      status:'finished', note:'已完成现场体验，酿造记录已同步至酿造进度。' },
+    { jar:'一号酱缸', cycle:'一年期', timer:'张府家酿 · 甲辰年', year:'2026',
+      act:'抽油出缸日', date:'待酱园通知（预计 2026-12）', place:'湘潭 · 龙牌晒场',
+      num:2, members:'张小满（子）', submit:'2026-10-28',
+      status:'follow', note:'酱园排期确认后将短信通知具体时间，请留意消息中心。' }
+  ];
+  const REG_STATUS = {
+    confirmed:{ t:'已确认参加', tag:'ok',   cls:'ok'   },
+    follow   :{ t:'待跟进',     tag:'warn', cls:'warn' },
+    finished :{ t:'已参加',     tag:'gray', cls:'gray' }
+  };
+
+  function renderMyReg(){
+    const box = document.getElementById('regGroups');
+    if(!box) return;
+    // 按酱缸分组
+    const groups = [];
+    REGS.forEach(r=>{
+      let g = groups.find(x=>x.jar === r.jar);
+      if(!g){ g = {jar:r.jar, cycle:r.cycle, timer:r.timer, items:[]}; groups.push(g); }
+      g.items.push(r);
+    });
+    box.innerHTML = groups.map(g=>{
+      const items = g.items.slice().sort((a,b)=> b.year.localeCompare(a.year));
+      return '<div class="reg-grp">'
+        + '<div class="rgh"><div class="rgh-l"><span class="rgh-t">' + g.jar + '</span>'
+        + '<span class="jc-period">' + g.cycle + '</span></div>'
+        + '<div class="rgh-s">' + g.timer + '</div></div>'
+        + items.map(r=>{
+            const st = REG_STATUS[r.status] || REG_STATUS.follow;
+            const noPush = (r.status === 'confirmed' || r.status === 'follow');
+            return '<div class="reg-card ' + st.cls + '" onclick="LP.regDetail(this)">'
+              + '<div class="rc-hd"><span class="rc-yr">' + r.year + ' 年度</span>'
+              + '<span class="lp-tag ' + st.tag + '">' + st.t + '</span></div>'
+              + '<div class="rc-t">' + r.act + '</div>'
+              + '<div class="rc-m">' + r.date + ' · ' + r.place + '</div>'
+              + '<div class="rc-n">' + r.note + '</div>'
+              + '<div class="rc-f"><span>报名 ' + r.num + ' 人 · 提交于 ' + r.submit + '</span>'
+              + '<span class="rc-more">详情<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span></div>'
+              + (noPush ? '<div class="rc-flag"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+                  + '该年度已有报名记录，系统不再推送报名消息与表单</div>' : '')
+              + '</div>';
+          }).join('')
+        + '</div>';
+    }).join('');
+  }
+  function regDetail(el){
+    const t = el ? el.querySelector('.rc-t') : null;
+    toast('《' + (t ? t.textContent : '家庭日') + '》报名详情（演示）');
+  }
+
   /* ---------- 发货详情：复制单号 / 去官网 ---------- */
   function copyCode(){
     const el = document.getElementById('shipCode');
@@ -483,8 +560,80 @@
     try{ window.open('https://www.sf-express.com/chn/sc', '_blank'); }catch(e){}
   }
 
+  /* ---------- 认领方式：本人认领 / 转赠他人 ---------- */
+  let claimWay = 'self';        // self | gift
+  let giftInfo = null;          // {tel, name, word}
+
+  function fmtTel(t){ return String(t).replace(/(\d{3})(\d{4})(\d{4})/, '$1 $2 $3'); }
+
+  function selWay(el){
+    const w = el.dataset.way;
+    if(w === 'gift' && !giftInfo){ openGift(); return; }   // 未填过 → 先弹转赠表单
+    setWay(w);
+  }
+  function setWay(w){
+    claimWay = w;
+    $all('#pg_pay .way-opt').forEach(o=>o.classList.toggle('on', o.dataset.way === w));
+    syncWay();
+  }
+  function syncWay(){
+    const box = document.getElementById('wayChosen');
+    const tel = document.getElementById('wayChosenTel');
+    const lbl = document.getElementById('payBtnLabel');
+    if(box) box.style.display = claimWay === 'gift' ? 'flex' : 'none';
+    if(tel && giftInfo) tel.textContent = fmtTel(giftInfo.tel) + (giftInfo.name ? '（' + giftInfo.name + '）' : '');
+    if(lbl) lbl.textContent = claimWay === 'gift' ? '确认转赠并支付' : '确认支付';
+  }
+
+  function openGift(){
+    const t = document.getElementById('giftTel');
+    const n = document.getElementById('giftName');
+    const w = document.getElementById('giftWord');
+    if(t && giftInfo) t.value = giftInfo.tel;
+    if(n && giftInfo) n.value = giftInfo.name || '';
+    if(w && giftInfo) w.value = giftInfo.word || '';
+    document.getElementById('giftMask').classList.add('on');
+  }
+  function closeGift(){
+    document.getElementById('giftMask').classList.remove('on');
+    if(!giftInfo) setWay('self');     // 未提交过转赠信息 → 回退到本人认领
+  }
+
+  function giftSubmit(){
+    const tel   = (document.getElementById('giftTel').value || '').replace(/\s/g,'');
+    const name  = (document.getElementById('giftName').value || '').trim();
+    const word  = (document.getElementById('giftWord').value || '').trim();
+    if(!/^1\d{10}$/.test(tel)){ toast('请填写对方正确的 11 位手机号'); return; }
+
+    giftInfo = { tel, name, word };
+    document.getElementById('giftMask').classList.remove('on');
+    setWay('gift');
+
+    // 转赠成功：预览对方收到的系统弹窗与短信
+    const d = cycleData[curCycle] || cycleData[1];
+    const who = name || '您';
+    const sub = document.getElementById('giftOkSub');
+    if(sub) sub.textContent = '已通知 ' + fmtTel(tel) + (name ? '（' + name + '）' : '') + '，酱缸权益将在对方绑定手机号后自动归属';
+    const sms = document.getElementById('giftOkSms');
+    if(sms){
+      sms.textContent = '【龙牌湘味】' + who + '您好，张酱友 向您转赠了一口' + d.name + '酱缸（' + d.bottles
+        + ' 瓶）。请使用微信登录「龙牌湘味」小程序并绑定本机号码即可查看。'
+        + '恭喜您，收到一口酱缸，快来查看酱缸制作工艺流程吧！';
+    }
+    document.getElementById('giftOkMask').classList.add('on');
+  }
+  function closeGiftOk(){ document.getElementById('giftOkMask').classList.remove('on'); }
+
   /* ---------- 各类提交 ---------- */
-  function pay(){ toast('支付成功，认领生效 🎉'); setTimeout(()=>show('myjars'),900); }
+  function pay(){
+    if(claimWay === 'gift' && giftInfo){
+      toast('转赠成功，已通知 ' + fmtTel(giftInfo.tel));
+      setTimeout(()=>{ giftInfo = null; setWay('self'); show('myjars'); }, 1000);
+      return;
+    }
+    toast('支付成功，认领生效 🎉');
+    setTimeout(()=>show('myjars'), 900);
+  }
   function playVideo(){ toast('正在播放《晒场实录》第 6 月（演示）'); }
   function familySubmit(){ toast('报名成功，届时凭短信到场'); setTimeout(()=>show('family'),900); }
   function pickupSubmit(){ toast('提货申请已提交，等待发货'); setTimeout(()=>show('pickuplog'),900); }
@@ -612,6 +761,78 @@
     el.classList.add('on');
   }
 
+  /** 新增/编辑完成后回到哪个页面 */
+  let addrFrom = 'pickup';
+  let editingAddr = 0;     // 0 = 新增；>0 = 编辑该 id
+
+  function renderAddrManage(){
+    const box = document.getElementById('addrManage');
+    const sum = document.getElementById('addrSum');
+    if(!box) return;
+    if(sum){
+      const d = ADDRS.find(a=>a.def);
+      sum.innerHTML = '共 <b>' + ADDRS.length + '</b> 个收货地址'
+        + (d ? ' · 默认「<b>' + d.tag + '</b>」' : ' · 暂未设置默认');
+    }
+    box.innerHTML = ADDRS.map(a =>
+      '<div class="am-li' + (a.def ? ' def' : '') + '">'
+      + '<div class="main"><div class="t">' + a.name + '<span class="tel">' + a.tel + '</span>'
+      + (a.def ? '<span class="addr-def">默认</span>' : '')
+      + '<span class="addr-tag">' + a.tag + '</span></div>'
+      + '<div class="s">' + addrFull(a) + '</div></div>'
+      + '<div class="am-ops">'
+      +   (a.def ? '' : '<button class="am-op" onclick="LP.setDefAddr(' + a.id + ')">设为默认</button>')
+      +   '<button class="am-op" onclick="LP.editAddr(' + a.id + ')">编辑</button>'
+      +   '<button class="am-op del" onclick="LP.delAddr(' + a.id + ')">删除</button>'
+      + '</div></div>'
+    ).join('');
+  }
+
+  /** 进入新增/编辑地址页；id 为 0 表示新增 */
+  function editAddr(id){
+    addrFrom = (CUR === 'addrlist') ? 'addrlist' : 'pickup';
+    editingAddr = id || 0;
+    resetAddrForm();
+    if(id){
+      const a = addrById(id);
+      document.getElementById('adName').value = a.name;
+      document.getElementById('adTel').value = a.tel.replace(/\s/g,'');
+      document.getElementById('adDetail').value = a.detail;
+      rg = { p:a.prov, c:a.city, d:a.dist }; rgLevel = 2;
+      const region = document.getElementById('adRegion');
+      if(region){
+        region.classList.add('filled');
+        region.querySelector('.rg-text').textContent = a.prov + ' ' + a.city + ' ' + a.dist;
+      }
+      const def = document.getElementById('adDefault');
+      if(def) def.checked = !!a.def;
+      $all('#adTags .ad-chip').forEach(c=>c.classList.toggle('on', c.textContent.trim() === a.tag));
+    }
+    const t = document.getElementById('addAddrTitle');
+    if(t) t.textContent = id ? '编辑收货地址' : '新增收货地址';
+    show('addaddr');
+  }
+
+  function delAddr(id){
+    const i = ADDRS.findIndex(a=>a.id === id);
+    if(i < 0) return;
+    if(ADDRS.length <= 1){ toast('至少保留一个收货地址'); return; }
+    const wasDef = ADDRS[i].def;
+    ADDRS.splice(i, 1);
+    if(wasDef && !ADDRS.some(a=>a.def)) ADDRS[0].def = true;
+    if(curAddr === id) curAddr = ADDRS[0].id;
+    renderAddrManage();
+    renderPickAddr();
+    toast('收货地址已删除');
+  }
+
+  function setDefAddr(id){
+    ADDRS.forEach(a=>{ a.def = (a.id === id); });
+    renderAddrManage();
+    renderPickAddr();
+    toast('已设为默认地址');
+  }
+
   function saveAddr(){
     const name = (document.getElementById('adName').value || '').trim();
     const tel  = (document.getElementById('adTel').value || '').replace(/\s/g,'');
@@ -630,12 +851,25 @@
       tag: tagEl ? tagEl.textContent.trim() : '家',
       def: isDef
     };
-    if(isDef) ADDRS.forEach(a=>a.def=false);
-    ADDRS.push(item);
-    curAddr = item.id;
+    if(editingAddr){
+      const a = addrById(editingAddr);
+      Object.assign(a, {name, tel:item.tel, prov:rg.p, city:rg.c, dist:rg.d, detail, tag:item.tag});
+      if(isDef){ ADDRS.forEach(x=>x.def=false); a.def = true; }
+      else if(a.def && !isDef){
+        a.def = false;
+        if(!ADDRS.some(x=>x.def)) ADDRS[0].def = true;
+      }
+      curAddr = a.id;
+    } else {
+      if(isDef) ADDRS.forEach(a=>a.def=false);
+      ADDRS.push(item);
+      curAddr = item.id;
+    }
     renderPickAddr();
-    toast('地址已保存并选用');
-    setTimeout(()=>show('pickup'), 500);
+    renderAddrManage();
+    toast(editingAddr ? '地址已更新' : '地址已保存并选用');
+    editingAddr = 0;
+    setTimeout(()=>show(addrFrom === 'addrlist' ? 'addrlist' : 'pickup'), 500);
   }
 
   /* ---------- 省市区选择 ---------- */
@@ -893,6 +1127,9 @@
   window.LP = {show,back,selCycle,selPType,selTcycle,pay,playVideo,familySubmit,pickupSubmit,transferSubmit,toggleNav,closeNav,renderTransfer,heroGo,
     toggleFb,viewImg,closeImg,focusFb,
     openAddr,closeAddr,chooseAddr,saveAddr,pickTag,pickRegion,closeRegion,rgPick,rgBack,renderPickAddr,
+    renderAddrManage,editAddr,delAddr,setDefAddr,
+    selWay,setWay,openGift,closeGift,giftSubmit,closeGiftOk,
+    renderMyReg,regDetail,
     openOrder,renderOrder,openRefund,pickReason,refundSubmit,copyCode,goExpress,
     payNow,cancelOrder,
     callService,closeTel,doCall,openQr,closeQr,saveQr,faq,openCert,closeCert,saveCert,chatSend,chatQuick,

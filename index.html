@@ -191,6 +191,22 @@
                 <div style="font-size:11px;color:var(--lp-ink-3);margin-top:6px">预计 <b id="payFinish">2027-10</b> 完成酿造</div>
               </div>
 
+              <div class="lp-sec-title" style="margin-top:18px">认领方式</div>
+              <div class="way-opt on" data-way="self" onclick="LP.selWay(this)">
+                <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></div>
+                <div class="tx"><div class="t">本人认领</div><div class="s">酱缸记在本人名下，可自行查看进度与提货</div></div>
+                <div class="rd"></div>
+              </div>
+              <div class="way-opt" data-way="gift" onclick="LP.selWay(this)">
+                <div class="ic gift"><svg viewBox="0 0 24 24"><path d="M3 9h18v11a2 2 0 01-2 2H5a2 2 0 01-2-2zM3 9l2-4h14l2 4M12 9v13"/><path d="M12 9S10.5 4 8 4a2.5 2.5 0 000 5M12 9s1.5-5 4-5a2.5 2.5 0 010 5"/></svg></div>
+                <div class="tx"><div class="t">转赠他人</div><div class="s">填写对方手机号，对方绑定后即可收到酱缸</div></div>
+                <div class="rd"></div>
+              </div>
+              <div class="way-chosen" id="wayChosen" style="display:none">
+                <div class="wc-l"><span class="wc-k">转赠对象</span><span class="wc-v" id="wayChosenTel">—</span></div>
+                <span class="wc-edit" onclick="LP.openGift()">修改</span>
+              </div>
+
               <div class="lp-sec-title" style="margin-top:18px">认领人信息</div>
               <div class="lp-field"><label>姓名</label><input class="lp-input" value="张酱友"></div>
               <div class="lp-field"><label>手机号</label><input class="lp-input" value="138 0000 8888"></div>
@@ -204,7 +220,7 @@
                 <span style="font-size:13px;color:var(--lp-ink-2)">应付</span>
                 <span class="lp-price" style="font-size:22px"><span class="cur">¥</span><span id="payPrice">8000</span></span>
               </div>
-              <button class="lp-btn lp-btn-primary lp-btn-block" onclick="LP.pay(this)">确认支付 ¥<span id="payBtnPrice">8000</span></button>
+              <button id="payBtn" class="lp-btn lp-btn-primary lp-btn-block" onclick="LP.pay(this)"><span id="payBtnLabel">确认支付</span> ¥<span id="payBtnPrice">8000</span></button>
             </div>
           </section>
 
@@ -389,7 +405,12 @@
                 <div class="ply"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
                 <div class="cap">走进晒场 · 亲子酿造体验</div>
               </div>
-              <div class="lp-row" data-go="familyreg"><div class="av" style="background:var(--lp-red-wash);color:var(--lp-red)">翻</div><div class="main"><div class="t">翻缸体验日</div><div class="s">2026-11-08 · 湘潭晒场 · 还剩 12 天</div></div><div class="rt"><span class="lp-tag ok">可报名</span></div></div>
+              <div class="reg-lock">
+                <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+                <div class="tx"><div class="t">本年度已有报名记录</div><div class="s">系统检测到您名下酱缸在本年度存在「已确认参加」或「待跟进」的报名，不再推送该年度的报名消息与表单。</div></div>
+                <span class="go" onclick="LP.show('myreg')">查看</span>
+              </div>
+              <div class="lp-row" data-go="myreg"><div class="av" style="background:rgba(63,122,75,.12);color:var(--lp-ok)">翻</div><div class="main"><div class="t">翻缸体验日</div><div class="s">2026-11-08 · 湘潭晒场 · 已确认参加</div></div><div class="rt"><span class="lp-tag ok">已报名</span></div></div>
               <div class="lp-row" data-go="familyreg"><div class="av" style="background:var(--lp-red-wash);color:var(--lp-red)">抽</div><div class="main"><div class="t">抽油封坛日</div><div class="s">2027-02-14 · 湘潭晒场 · 名额不限</div></div><div class="rt"><span class="lp-tag ok">可报名</span></div></div>
               <div class="lp-row" data-go="familyreg"><div class="av" style="background:rgba(67,39,26,.1);color:var(--lp-brown-2)">制</div><div class="main"><div class="t">制醅开工日</div><div class="s">2027-04-20 · 湘潭酱园 · 即将开放</div></div><div class="rt"><span class="lp-tag gray">未开放</span></div></div>
             </div>
@@ -451,7 +472,7 @@
               <div class="lp-field"><label>本次提货瓶数</label><input class="lp-input" id="pickNum" value="40"></div>
               <div class="lp-sec-title">收货信息</div>
               <div id="pickAddr"></div>
-              <button class="addr-add" onclick="LP.show('addaddr')">
+              <button class="addr-add" onclick="LP.editAddr(0)">
                 <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增收货地址
               </button>
             </div>
@@ -462,7 +483,7 @@
 
           <!-- ========== 新增收货地址 ========== -->
           <section class="lp-screen" id="pg_addaddr">
-            <div class="lp-navbar"><button class="nb-btn" data-go="pickup"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title">新增收货地址</div></div>
+            <div class="lp-navbar"><button class="nb-btn" onclick="LP.back('addaddr','pickup')"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nb-title" id="addAddrTitle">新增收货地址</div></div>
             <div class="lp-body lp-scroll pad">
               <div class="lp-field"><label>收货人</label><input class="lp-input" id="adName" placeholder="请输入收货人姓名"></div>
               <div class="lp-field"><label>手机号</label><input class="lp-input" id="adTel" placeholder="请输入 11 位手机号" inputmode="numeric" maxlength="11"></div>
@@ -643,6 +664,38 @@
             </div>
           </section>
 
+          <!-- ========== 我的报名（家庭日） ========== -->
+          <section class="lp-screen" id="pg_myreg">
+            <div class="lp-navbar"><div class="nb-title">我的报名</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="reg-rule">
+                <div class="t"><svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>家庭日参与规则</div>
+                <div class="s">每个认领周期含固定次数的家庭日：<b>一年期 3 次 / 二年期 5 次 / 三年期 7 次</b>。<b>同一自然年内，每口酱缸仅可参加 1 次</b>。系统检测到该年度已存在「已确认参加」或「待跟进」的报名记录后，将不再推送该年度的家庭日报名消息与表单。</div>
+              </div>
+              <div id="regGroups"></div>
+              <div class="ad-note" style="margin-top:16px">
+                <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
+                <span>报名提交后由酱园确认名额，结果通过消息中心与短信同步；如需变更人数或取消，请在活动开始前联系客服。</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========== 收货地址管理 ========== -->
+          <section class="lp-screen" id="pg_addrlist">
+            <div class="lp-navbar"><div class="nb-title">收货地址</div></div>
+            <div class="lp-body lp-scroll pad">
+              <div class="jar-sum" id="addrSum">共 <b>2</b> 个收货地址</div>
+              <div id="addrManage"></div>
+              <button class="addr-add" style="margin-top:14px" onclick="LP.editAddr(0)">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增收货地址
+              </button>
+              <div class="ad-note" style="margin-top:16px">
+                <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
+                <span>默认地址将在申请提货时自动选中；酒类寄送需实名，收货人姓名请与身份证一致。</span>
+              </div>
+            </div>
+          </section>
+
           <!-- ========== 消息 ========== -->
           <section class="lp-screen" id="pg_msg">
             <div class="lp-navbar"><div class="nb-title">消息中心</div></div>
@@ -717,7 +770,9 @@
 
               <div class="lp-row" data-go="myjars"><div class="av" style="background:var(--lp-red-wash);color:var(--lp-red)">缸</div><div class="main"><div class="t">我的酱缸</div></div><div class="rt"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
               <div class="lp-row" data-go="orders"><div class="av" style="background:var(--lp-gold);color:#3A2410">单</div><div class="main"><div class="t">我的订单</div></div><div class="rt"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+              <div class="lp-row" data-go="myreg"><div class="av" style="background:rgba(184,120,40,.14);color:#A2632B">报</div><div class="main"><div class="t">我的报名</div><div class="s">家庭日活动报名记录</div></div><div class="rt"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
               <div class="lp-row" data-go="vip"><div class="av" style="background:rgba(67,39,26,.1);color:var(--lp-brown-2)">权</div><div class="main"><div class="t">会员权益</div></div><div class="rt"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+              <div class="lp-row" data-go="addrlist"><div class="av" style="background:rgba(67,39,26,.1);color:var(--lp-brown-2)">址</div><div class="main"><div class="t">收货地址</div><div class="s">管理提货收货地址</div></div><div class="rt"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
               <div class="lp-row" data-go="msg"><div class="av" style="background:var(--lp-red-wash);color:var(--lp-red)">消</div><div class="main"><div class="t">消息中心</div></div><div class="rt"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
               <div class="lp-row" data-go="service"><div class="av" style="background:rgba(67,39,26,.1);color:var(--lp-brown-2)">客</div><div class="main"><div class="t">联系客服</div><div class="s">电话 / 微信 / 在线咨询</div></div><div class="rt"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
               <div class="lp-row" id="logoutRow" style="display:none" onclick="LP.logout()"><div class="av" style="background:rgba(67,39,26,.06);color:var(--lp-ink-3)">退</div><div class="main"><div class="t" style="color:var(--lp-ink-3)">退出登录</div></div><div class="rt"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
@@ -835,7 +890,7 @@
           <div class="lp-sheet">
             <div class="hd"><div class="t">选择收货地址</div><div class="x" onclick="LP.closeAddr()">✕</div></div>
             <div id="addrList"></div>
-            <button class="addr-add" style="margin-top:6px" onclick="LP.closeAddr();LP.show('addaddr')">
+            <button class="addr-add" style="margin-top:6px" onclick="LP.closeAddr();LP.editAddr(0)">
               <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新增收货地址
             </button>
           </div>
@@ -866,6 +921,53 @@
             <div class="qr-btns">
               <button class="lp-btn lp-btn-ghost" onclick="LP.closeCert()">关闭</button>
               <button class="lp-btn lp-btn-primary" onclick="LP.saveCert()">保存证书</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 酱缸转赠弹窗 -->
+        <div class="lp-mask center" id="giftMask" onclick="if(event.target===this)LP.closeGift()">
+          <div class="gift-sheet">
+            <div class="gift-x" onclick="LP.closeGift()">×</div>
+            <div class="gift-ic"><svg viewBox="0 0 24 24"><path d="M3 9h18v11a2 2 0 01-2 2H5a2 2 0 01-2-2zM3 9l2-4h14l2 4M12 9v13"/><path d="M12 9S10.5 4 8 4a2.5 2.5 0 000 5M12 9s1.5-5 4-5a2.5 2.5 0 010 5"/></svg></div>
+            <div class="gift-t">酱缸转赠</div>
+            <div class="gift-s">填写对方手机号，转赠成功后酱缸权益归对方所有</div>
+
+            <div class="lp-field" style="margin-top:16px"><label>转赠对象手机号</label><input class="lp-input" id="giftTel" placeholder="请输入对方 11 位手机号" inputmode="numeric" maxlength="11"></div>
+            <div class="lp-field"><label>对方称呼（选填）</label><input class="lp-input" id="giftName" placeholder="如：李梅"></div>
+            <div class="lp-field"><label>赠言（选填）</label><textarea class="lp-input lp-textarea" id="giftWord" placeholder="如：赠你一缸好酱，愿日子有滋有味"></textarea></div>
+
+            <div class="gift-tip">
+              <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
+              <span>转赠后，对方使用微信登录本小程序并绑定该手机号，即可收到系统弹窗与短信提醒。转赠一经提交不可撤回。</span>
+            </div>
+            <div class="qr-btns" style="margin-top:14px">
+              <button class="lp-btn lp-btn-ghost" onclick="LP.closeGift()">取消</button>
+              <button class="lp-btn lp-btn-primary" onclick="LP.giftSubmit()">提交转赠</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 转赠成功 · 接收方通知预览 -->
+        <div class="lp-mask center" id="giftOkMask" onclick="if(event.target===this)LP.closeGiftOk()">
+          <div class="gift-sheet">
+            <div class="gok-ic"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+            <div class="gift-t">转赠成功</div>
+            <div class="gift-s" id="giftOkSub">已通知对方，酱缸权益将在对方绑定手机号后自动归属</div>
+
+            <div class="gok-lbl">对方将收到的系统弹窗</div>
+            <div class="gok-pop">
+              <div class="gp-ic"><svg viewBox="0 0 24 24"><path d="M8.5 3.5h7M9.5 3.5v1.9c0 .8-.3 1.5-.9 2.1l-1 1.2c-.6.7-.9 1.5-.9 2.4v8c0 .9.7 1.6 1.6 1.6h5.4c.9 0 1.6-.7 1.6-1.6v-8c0-.9-.3-1.7-.9-2.4l-1-1.2c-.6-.6-.9-1.3-.9-2.1V3.5"/><path d="M6.7 14.5h10.6"/></svg></div>
+              <div class="gp-t">恭喜您，收到一口酱缸</div>
+              <div class="gp-s">快来查看酱缸制作工艺流程吧！</div>
+              <div class="gp-btn">查看我的酱缸</div>
+            </div>
+
+            <div class="gok-lbl">同步下发的短信提醒</div>
+            <div class="gok-sms" id="giftOkSms"></div>
+
+            <div class="qr-btns" style="margin-top:14px">
+              <button class="lp-btn lp-btn-primary lp-btn-block" onclick="LP.closeGiftOk()">知道了</button>
             </div>
           </div>
         </div>
